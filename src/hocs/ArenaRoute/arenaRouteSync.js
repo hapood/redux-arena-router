@@ -13,7 +13,7 @@ class ArenaRouteSyncAgent extends Component {
   }
 
   render() {
-    let { WrappedComponent, ...innerProps } = this.props;
+    let { WrappedComponent, setRouteState, ...innerProps } = this.props;
     return React.createElement(WrappedComponent, innerProps);
   }
 }

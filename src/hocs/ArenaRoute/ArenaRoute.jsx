@@ -23,7 +23,7 @@ export default class ArenaRoute extends Component {
     exact: true
   };
 
-  rendToElement(props, ArenaSceneHOC) {
+  rendToElement(props, ArenaSceneHOC, playId) {
     let {
       exact,
       strict,
@@ -50,7 +50,8 @@ export default class ArenaRoute extends Component {
           return React.createElement(ArenaSceneHOC, {
             isNotifyOn,
             notifyData: Object.assign({}, routeProps, notifyData, {
-              arenaReducerDict
+              arenaReducerDict,
+              playId
             }),
             reducerKey,
             vReducerKey,
@@ -68,12 +69,18 @@ export default class ArenaRoute extends Component {
     this.state = {
       ArenaSceneHOC: arenaRouteSync(ArenaScene, actions.setState)
     };
+    let symbol = Symbol(
+      Math.random()
+        .toString()
+        .slice(2, 10)
+    );
     if (animationDictItem) {
       this.state.playElement = this.rendToElement(
         this.props,
-        this.state.ArenaSceneHOC
+        this.state.ArenaSceneHOC,
+        symbol
       );
-      animationDictItem.actions.addPlay(this.state.playElement);
+      animationDictItem.actions.addPlay(this.state.playElement, symbol);
     }
   }
 
@@ -85,7 +92,7 @@ export default class ArenaRoute extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let { actions,animationDictItem } = nextProps;
+    let { actions, animationDictItem } = nextProps;
     if (actions !== this.props.actions) {
       this.state.ArenaSceneHOC = arenaRouteSync(ArenaScene, actions.setState);
     }
@@ -93,12 +100,21 @@ export default class ArenaRoute extends Component {
 
   componentDidUpdate() {
     let { animationDictItem } = this.props;
+    if (animationDictItem) {
+      animationDictItem.actions.removePlay(this.state.playElement);
+    }
+    let symbol = Symbol(
+      Math.random()
+        .toString()
+        .slice(2, 10)
+    );
     this.state.playElement = this.rendToElement(
       this.props,
-      this.state.ArenaSceneHOC
+      this.state.ArenaSceneHOC,
+      symbol
     );
     if (animationDictItem) {
-      animationDictItem.actions.replacePlay(this.state.playElement);
+      animationDictItem.actions.addPlay(this.state.playElement, symbol);
     }
   }
 

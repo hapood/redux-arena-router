@@ -2,9 +2,7 @@ import { ARENA_SCENE_SET_STATE } from "redux-arena/actionTypes";
 import {
   ARENA_SWITCH_ANIMATION_PLAY_ADD,
   ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
-  ARENA_SWITCH_ANIMATION_PLAY_REPLACE,
   ARENA_SWITCH_ANIMATION_PLAY_NEXT,
-  ARENA_SWITCH_ANIMATION_PLAY_LATEST,
   ARENA_SWITCH_ANIMATION_NEXTPRASE
 } from "./actionType";
 
@@ -19,10 +17,15 @@ export function nextPhase() {
   return { type: ARENA_SWITCH_ANIMATION_NEXTPRASE };
 }
 
-export function addPlay(element) {
+export function getPlayId() {}
+
+export function addPlay(element, symbol) {
   return {
     type: ARENA_SWITCH_ANIMATION_PLAY_ADD,
-    element
+    entity: {
+      element,
+      symbol
+    }
   };
 }
 
@@ -30,14 +33,6 @@ export function removePlay(element) {
   return {
     type: ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
     element
-  };
-}
-
-export function replacePlay(oldElement, newElement) {
-  return {
-    type: ARENA_SWITCH_ANIMATION_PLAY_REPLACE,
-    oldElement,
-    newElement
   };
 }
 
