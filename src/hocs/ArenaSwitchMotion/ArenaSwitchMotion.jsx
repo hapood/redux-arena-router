@@ -4,16 +4,23 @@ import { PRE_ENTER, ENTERING, IN, LEAVING, OUT } from "./anamitionPhase";
 
 export default class ArenaSwitchAnimation extends Component {
   static propTypes = {
+    children: PropTypes.element.isRequired,
     containerStyleCalcer: PropTypes.object.isRequired,
     oldPlayStyleCalcer: PropTypes.func.isRequired,
     newPlayStyleCalcer: PropTypes.func.isRequired,
-    nextPhaseCaller: PropTypes.func.isRequired
+    nextPhaseChecker: PropTypes.func.isRequired,
+    emptyElement: PropTypes.element,
+    loadingElement: PropTypes.element
   };
   static defaultProps = {
     containerStyleCalcer: () => ({}),
     oldPlayStyleCalcer: () => ({}),
     newPlayStyleCalcer: () => ({}),
-    nextPhaseCaller: () => false
+    nextPhaseChecker: (prevStyles, phase, nextPhase) => {
+      if (phase !== IN) nextPhase();
+    },
+    emptyElement: <div />,
+    loadingElement: <div />
   };
   componentWillMount() {
     this.state = {};
@@ -38,9 +45,6 @@ export default class ArenaSwitchAnimation extends Component {
       oldPlayStyleCalcer,
       newPlayStyleCalcer
     } = this.props;
-    if (this.props[newPlayKey === "play2" ? "play1" : "play2"] == null) {
-      return <div />;
-    }
     let oldPlayKey, oldReadyKey, newReadyKey;
     if (newPlayKey === "play2") {
       oldPlayKey = "play1";
@@ -60,6 +64,7 @@ export default class ArenaSwitchAnimation extends Component {
             style: containerStyleCalcer(
               prevStyles,
               phase,
+              this.props[oldPlayKey] == null,
               this.props[oldReadyKey],
               this.props[newReadyKey]
             )
@@ -69,6 +74,7 @@ export default class ArenaSwitchAnimation extends Component {
             style: containerStyleCalcer(
               prevStyles,
               phase,
+              this.props[oldPlayKey] == null,
               this.props[oldReadyKey],
               this.props[newReadyKey]
             )
@@ -78,14 +84,17 @@ export default class ArenaSwitchAnimation extends Component {
             style: containerStyleCalcer(
               prevStyles,
               phase,
+              this.props[oldPlayKey] == null,
               this.props[oldReadyKey],
               this.props[newReadyKey]
             )
           },
           {
             key: "void",
-            style: nextPhaseCaller(prevStyles, phase, () =>
-              setImmediate(actions.nextPhase)
+            style: nextPhaseChecker(prevStyles, phase, () =>
+              setImmediate(() =>
+                actions.nextPhase(phase, oldPlayKey, this.props[oldPlayKey])
+              )
             )
           }
         ]}
@@ -93,11 +102,20 @@ export default class ArenaSwitchAnimation extends Component {
         {interpolatedStyles => {
           return (
             <div style={interpolatedStyles[0]}>
+              {this.props.children}
               <div key={oldPlayKey} style={{ ...interpolatedStyles[1].style }}>
-                {this.prop[oldPlayKey]}
+                {this.props[oldReadyKey] ? (
+                  this.props[oldPlayKey].element || this.props.emptyElement
+                ) : (
+                  this.props.loadingElement
+                )}
               </div>
               <div key={newPlayKey} style={{ ...interpolatedStyles[2].style }}>
-                {this.prop[oldPlayKey]}
+                {this.props[newReadyKey] ? (
+                  this.props[newPlayKey].element
+                ) : (
+                  this.props.loadingElement
+                )}
               </div>
             </div>
           );

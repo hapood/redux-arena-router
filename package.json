@@ -3,25 +3,27 @@
   "version": "0.0.1",
   "description": "High order components of react-router based on redux-arena",
   "scripts": {
-    "build:cjs":
-      "cross-env BABEL_ENV=cjs babel ./src --out-dir ./build/lib --ignore spec.js",
-    "build:es":
-      "cross-env BABEL_ENV=es babel ./src --out-dir ./build/es --ignore spec.js",
+    "build:cjs": "cross-env BABEL_ENV=cjs babel ./src --out-dir ./build/lib --ignore spec.js",
+    "build:es": "cross-env BABEL_ENV=es babel ./src --out-dir ./build/es --ignore spec.js",
     "build": "run-p build:**",
-    "build:copy-files":
-      "cross-env BABEL_ENV=cjs babel-node ./scripts/copy-files.js",
+    "build:copy-files": "cross-env BABEL_ENV=cjs babel-node ./scripts/copy-files.js",
     "clean:build": "rimraf build",
     "prebuild": "npm run clean:build",
     "postpublish": "npm run build && cd build && npm publish",
     "test": "karma start test/karma.conf.js",
-    "test-travis":
-      "karma start test/karma.conf.js --browsers Firefox --single-run"
+    "test-travis": "karma start test/karma.conf.js --browsers Firefox --single-run"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hapood/redux-arena-router.git"
   },
-  "keywords": ["react", "react-router", "redux", "redux-arena", "animation"],
+  "keywords": [
+    "react",
+    "react-router",
+    "redux",
+    "redux-arena",
+    "animation"
+  ],
   "author": "Hapood Wang",
   "license": "Apache-2.0",
   "bugs": {
@@ -36,6 +38,7 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",

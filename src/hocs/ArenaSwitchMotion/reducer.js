@@ -8,9 +8,25 @@ import {
 import { ENTERING, IN, LEAVING, OUT } from "./anamitionPhase";
 import { PLAT_LATEST, PLAT_NEXT } from "./playStrategy";
 
-export default function(state = initState, action) {
+export default function(state = initState, action, sceneReudcerKey) {
+  switch (action.type) {
+    case ARENA_SCENEBUNDLE_PLAY_START:
+      if (state.play1.playId === action.playId) {
+        return Object.assign({}, state, { isReadyPlay1: true });
+      } else if (state.play2.playId === action.playId) {
+        return Object.assign({}, state, { isReadyPlay2: true });
+      } else {
+        return state;
+      }
+  }
+  if (action._sceneReducerKey !== sceneReducerKey) return state;
   switch (action.type) {
     case ARENA_SWITCH_ANIMATION_NEXTPRASE:
+      if (
+        action.phase !== state.phase ||
+        state[action.oldPlayKey] !== action.oldPlay
+      )
+        return state;
       switch (state.phase) {
         case ENTERING:
           let newPlayKey, readyKey;
@@ -52,7 +68,8 @@ export default function(state = initState, action) {
             newState[state.newPlayKey] = state.playlist[0];
             newState.playlist = state.playlist.slice(1);
           default:
-            newState[state.newPlayKey] = state.playlist[state.playlist.length - 1];
+            newState[state.newPlayKey] =
+              state.playlist[state.playlist.length - 1];
             newState.playlist = [];
         }
       }

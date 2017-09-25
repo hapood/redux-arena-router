@@ -1,0 +1,28 @@
+{
+  "presets": ["react"],
+  "env": {
+    "cjs": {
+      "presets": [
+        [
+          "env",
+          {
+            "loose": true
+          }
+        ]
+      ],
+      "plugins": ["transform-class-properties", "transform-object-rest-spread"]
+    },
+    "es": {
+      "presets": [
+        [
+          "env",
+          {
+            "loose": true,
+            "modules": false
+          }
+        ]
+      ],
+      "plugins": ["transform-class-properties", "transform-object-rest-spread"]
+    }
+  }
+}

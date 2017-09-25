@@ -13,18 +13,16 @@ export function setState(state) {
   };
 }
 
-export function nextPhase() {
-  return { type: ARENA_SWITCH_ANIMATION_NEXTPRASE };
+export function nextPhase(phase, oldPlayKey, oldPlay) {
+  return { type: ARENA_SWITCH_ANIMATION_NEXTPRASE, phase, oldPlayKey, oldPlay };
 }
 
-export function getPlayId() {}
-
-export function addPlay(element, symbol) {
+export function addPlay(element, playId) {
   return {
     type: ARENA_SWITCH_ANIMATION_PLAY_ADD,
     entity: {
       element,
-      symbol
+      playId
     }
   };
 }
