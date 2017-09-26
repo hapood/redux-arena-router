@@ -280,7 +280,7 @@ export default class ArenaSwitchAnimation extends Component {
       this.state.defaultStyles = nextProps.defaultStyles.concat(nextPhaseStyle);
     }
     if (
-      nextProps.phase === IN &&
+      (nextProps.phase === IN || nextProps.phase === OUT) &&
       (nextProps.playlist.length > 0 || nextProps.autoClearPlay)
     ) {
       this.props.actions.playNext();

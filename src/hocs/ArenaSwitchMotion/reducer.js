@@ -54,17 +54,20 @@ export default function(state = initState, action, sceneReducerKey) {
           return state;
       }
     case ARENA_SWITCH_ANIMATION_PLAY_NEXT:
-      if (
-        state.phase !== IN ||
-        (state.playlist.length === 0 && state.autoClearPlay == null)
-      )
+      if (state.playlist.length === 0 && state.autoClearPlay == null)
         return state;
       let newState = Object.assign({}, state);
-      if (state.autoClearPlay != null) {
+      if (state.phase === IN) {
         newState.phase = PRE_LEAVE;
+      } else if (
+        (state.phase === OUT || state.phase === IN) &&
+        state.autoClearPlay != null
+      ) {
+        newState.autoClearPlay = null;
+      } else {
+        return state;
       }
       if (state.playlist.length > 0) {
-        newState.phase = PRE_LEAVE;
         if (state.newPlayKey === "play2") {
           newState.isReadyPlay2 = false;
         } else {
@@ -87,7 +90,7 @@ export default function(state = initState, action, sceneReducerKey) {
       });
     case ARENA_SWITCH_ANIMATION_PLAY_REMOVE:
       if (state.phase == IN && state.play1 === action.element) {
-        return Object.assign({}, state, { phase: LEAVING });
+        return Object.assign({}, state, { phase: PRE_LEAVE });
       } else if (state[state.newPlayKey].element === action.element) {
         return Object.assign({}, state, { autoClearPlay: action.element });
       } else {
