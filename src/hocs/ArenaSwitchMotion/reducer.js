@@ -1,19 +1,20 @@
 import initState from "./state";
 import {
-  ARENA_SWITCH_ANIMATION_NEXTPRASE,
+  ARENA_SWITCH_ANIMATION_NEXTPHRASE,
   ARENA_SWITCH_ANIMATION_PLAY_ADD,
   ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
   ARENA_SWITCH_ANIMATION_PLAY_NEXT
 } from "./actionType";
-import { ENTERING, IN, LEAVING, OUT } from "./anamitionPhase";
+import { ARENA_SCENEBUNDLE_PLAY_START } from "redux-arena/actionTypes";
+import { ENTERING, IN, PRE_LEAVE, LEAVING, OUT } from "./anamitionPhase";
 import { PLAT_LATEST, PLAT_NEXT } from "./playStrategy";
 
-export default function(state = initState, action, sceneReudcerKey) {
+export default function(state = initState, action, sceneReducerKey) {
   switch (action.type) {
     case ARENA_SCENEBUNDLE_PLAY_START:
-      if (state.play1.playId === action.playId) {
+      if (state.play1.playId === action.notifyData.playId) {
         return Object.assign({}, state, { isReadyPlay1: true });
-      } else if (state.play2.playId === action.playId) {
+      } else if (state.play2.playId === action.notifyData.playId) {
         return Object.assign({}, state, { isReadyPlay2: true });
       } else {
         return state;
@@ -21,28 +22,30 @@ export default function(state = initState, action, sceneReudcerKey) {
   }
   if (action._sceneReducerKey !== sceneReducerKey) return state;
   switch (action.type) {
-    case ARENA_SWITCH_ANIMATION_NEXTPRASE:
-      if (
-        action.phase !== state.phase ||
-        state[action.oldPlayKey] !== action.oldPlay
-      )
-        return state;
+    case ARENA_SWITCH_ANIMATION_NEXTPHRASE:
+      let { phase, oldPlayKey, oldPlay } = action;
+      if (state.phase !== phase || state[oldPlayKey] !== oldPlay) return state;
       switch (state.phase) {
         case ENTERING:
-          let newPlayKey, readyKey;
+          let newPlayKey, oldReadyKey, newReadyKey;
           if (state.newPlayKey === "play2") {
             newPlayKey = "play1";
-            readyKey = "isReadyPlay1";
+            newReadyKey = "isReadyPlay1";
+            oldReadyKey = "isReadyPlay2";
           } else {
             newPlayKey = "play2";
-            readyKey = "isReadyPlay2";
+            newReadyKey = "isReadyPlay2";
+            oldReadyKey = "isReadyPlay2";
           }
           return Object.assign({}, state, {
             phase: IN,
-            [state.newPlayKey]: null,
-            [readyKey]: false,
+            [newPlayKey]: {},
+            [newReadyKey]: true,
+            [oldReadyKey]: state[newReadyKey],
             newPlayKey
           });
+        case PRE_LEAVE:
+          return Object.assign({}, state, { phase: LEAVING });
         case LEAVING:
           return Object.assign({}, state, { phase: OUT });
         case OUT:
@@ -58,11 +61,15 @@ export default function(state = initState, action, sceneReudcerKey) {
         return state;
       let newState = Object.assign({}, state);
       if (state.autoClearPlay != null) {
-        newState.phase = LEAVING;
+        newState.phase = PRE_LEAVE;
       }
       if (state.playlist.length > 0) {
-        newState.phase = LEAVING;
-        newState.isPreEnterEnd = false;
+        newState.phase = PRE_LEAVE;
+        if (state.newPlayKey === "play2") {
+          newState.isReadyPlay2 = false;
+        } else {
+          newState.isReadyPlay1 = false;
+        }
         switch (action.playStrategy) {
           case PLAT_NEXT:
             newState[state.newPlayKey] = state.playlist[0];

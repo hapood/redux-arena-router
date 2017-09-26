@@ -7,7 +7,7 @@ export default class Page extends Component {
       <div
         style={{ width: "100%", height: "100%", backgroundColor: "#39C5BB" }}
       >
-        PageA
+        PageB
       </div>
     );
   }

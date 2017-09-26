@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Switch, Router, Link } from "react-router-dom";
-import { ArenaSwitchAnimation, RouteScene } from "redux-arena-router";
+import { BrowserRouter, Switch, Link } from "react-router-dom";
+import { ArenaSwitchMotion, ArenaRoute } from "redux-arena-router";
 import pageABundle from "./pageA";
 
 const asyncPageBBundle = import("./PageB");
@@ -11,7 +11,7 @@ export default class Frame extends Component {
     let { cnt, addCnt, clearCnt } = this.props;
     return (
       <div>
-        <Router history={this.props.history}>
+        <BrowserRouter history={this.props.history}>
           <div>
             <ul>
               <li>
@@ -20,34 +20,26 @@ export default class Frame extends Component {
               <li>
                 <Link to="/redux-arena/PageB">PageB</Link>
               </li>
-              <li>
-                <Link to="/redux-arena/passDownStateAndActions">
-                  Pass Down State And Actions
-                </Link>
-              </li>
-              <li>
-                <Link to="/redux-arena/moduleReUse">Module Re-Use</Link>
-              </li>
             </ul>
             <hr />
             <div>
               <div style={{ marginTop: "1rem" }}>
-                <ArenaSwitchAnimation>
+                <ArenaSwitchMotion>
                   <Switch>
-                    <RouteScene
+                    <ArenaRoute
                       path="/redux-arena/pageA"
                       sceneBundle={pageABundle}
                     />
-                    <RouteScene
+                    <ArenaRoute
                       path="/redux-arena/pageB"
                       asyncSceneBundle={asyncPageBBundle}
                     />
                   </Switch>
-                </ArenaSwitchAnimation>
+                </ArenaSwitchMotion>
               </div>
             </div>
           </div>
-        </Router>
+        </BrowserRouter>
       </div>
     );
   }

@@ -3,7 +3,7 @@ import {
   ARENA_SWITCH_ANIMATION_PLAY_ADD,
   ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
   ARENA_SWITCH_ANIMATION_PLAY_NEXT,
-  ARENA_SWITCH_ANIMATION_NEXTPRASE
+  ARENA_SWITCH_ANIMATION_NEXTPHRASE
 } from "./actionType";
 
 export function setState(state) {
@@ -14,7 +14,12 @@ export function setState(state) {
 }
 
 export function nextPhase(phase, oldPlayKey, oldPlay) {
-  return { type: ARENA_SWITCH_ANIMATION_NEXTPRASE, phase, oldPlayKey, oldPlay };
+  return {
+    type: ARENA_SWITCH_ANIMATION_NEXTPHRASE,
+    phase,
+    oldPlayKey,
+    oldPlay
+  };
 }
 
 export function addPlay(element, playId) {
@@ -34,16 +39,9 @@ export function removePlay(element) {
   };
 }
 
-export function playNext(element) {
+export function playNext(playStrategy) {
   return {
     type: ARENA_SWITCH_ANIMATION_PLAY_NEXT,
-    element
-  };
-}
-
-export function playLatest(element) {
-  return {
-    type: ARENA_SWITCH_ANIMATION_PLAY_LATEST,
-    element
+    playStrategy
   };
 }

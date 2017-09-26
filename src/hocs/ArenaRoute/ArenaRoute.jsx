@@ -67,7 +67,8 @@ export default class ArenaRoute extends Component {
   componentWillMount() {
     let { actions, animationDictItem } = this.props;
     this.state = {
-      ArenaSceneHOC: arenaRouteSync(ArenaScene, actions.setState)
+      ArenaSceneHOC: arenaRouteSync(ArenaScene, actions.setState),
+      isObsolete: false
     };
     let symbol = Symbol(
       Math.random()
@@ -95,26 +96,36 @@ export default class ArenaRoute extends Component {
     let { actions, animationDictItem } = nextProps;
     if (actions !== this.props.actions) {
       this.state.ArenaSceneHOC = arenaRouteSync(ArenaScene, actions.setState);
+      this.state.isObsolete = true;
+    }
+    if (
+      animationDictItem !== this.props.animationDictItem ||
+      nextProps.location !== this.props.location
+    ) {
+      this.state.isObsolete = true;
     }
   }
 
   componentDidUpdate() {
-    let { animationDictItem } = this.props;
-    if (animationDictItem) {
-      animationDictItem.actions.removePlay(this.state.playElement);
-    }
-    let symbol = Symbol(
-      Math.random()
-        .toString()
-        .slice(2, 10)
-    );
-    this.state.playElement = this.rendToElement(
-      this.props,
-      this.state.ArenaSceneHOC,
-      symbol
-    );
-    if (animationDictItem) {
-      animationDictItem.actions.addPlay(this.state.playElement, symbol);
+    if (this.state.isObsolete) {
+      this.state.isObsolete = false;
+      let { animationDictItem } = this.props;
+      if (animationDictItem) {
+        animationDictItem.actions.removePlay(this.state.playElement);
+      }
+      let symbol = Symbol(
+        Math.random()
+          .toString()
+          .slice(2, 10)
+      );
+      this.state.playElement = this.rendToElement(
+        this.props,
+        this.state.ArenaSceneHOC,
+        symbol
+      );
+      if (animationDictItem) {
+        animationDictItem.actions.addPlay(this.state.playElement, symbol);
+      }
     }
   }
 
@@ -122,7 +133,7 @@ export default class ArenaRoute extends Component {
     if (this.props.animationDictItem) {
       return <div />;
     } else {
-      this.rendToElement(this.props, this.state.ArenaSceneHOC);
+      return this.rendToElement(this.props, this.state.ArenaSceneHOC);
     }
   }
 }
