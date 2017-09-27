@@ -5,7 +5,7 @@ import {
   ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
   ARENA_SWITCH_ANIMATION_PLAY_NEXT
 } from "./actionType";
-import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
+import { ENTERING, IN, LEAVING, OUT } from "../../animationPhase";
 import { PLAT_LATEST, PLAT_NEXT } from "./playStrategy";
 
 export default function(state = initState, action) {

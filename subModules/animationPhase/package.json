@@ -1,7 +1,7 @@
 {
   "name": "redux-arena-router/animationPhase",
   "private": true,
-  "main": "../lib/hocs/ArenaSwitchMotion/animationPhase.js",
-  "module": "../es/hocs/ArenaSwitchMotion/animationPhase.js",
-  "jsnext:main": "../es/hocs/ArenaSwitchMotion/animationPhase.js"
+  "main": "../lib/hocs/animationPhase/index.js",
+  "module": "../es/hocs/animationPhase/index.js",
+  "jsnext:main": "../es/hocs/animationPhase/index.js"
 }

@@ -9,7 +9,6 @@ export default withRouter(bundleToComponent({
   actions,
   reducer,
   options: {
-    vReducerKey: "_arenaSwitchAnimation",
-    isSceneReducer: false
+    vReducerKey: "_arenaSwitchAnimation"
   }
 }));
