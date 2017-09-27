@@ -1,4 +1,4 @@
-import ArenaRoute from "./hocs/ArenaRoute";
-import ArenaSwitchMotion from "./hocs/ArenaSwitchMotion";
+export { ArenaRoute, ArenaSwitchMotion } from "./hocs";
 
-export { ArenaRoute, ArenaSwitchMotion };
+import * as switchMotionPhase from "./hocs/ArenaSwitchMotion/animationPhase";
+export { switchMotionPhase };

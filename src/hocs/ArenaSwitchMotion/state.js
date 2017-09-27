@@ -1,4 +1,4 @@
-import { IN } from "../../animationPhase";
+import { IN } from "./animationPhase";
 
 export default {
   play1: {},

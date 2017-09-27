@@ -1,5 +1,5 @@
 import { spring, presets } from "react-motion";
-import { ENTERING, IN, LEAVING, OUT } from "redux-arena-router/animationPhase";
+import { switchMotionPhase } from "redux-arena-router/animationPhase";
 
 export const defaultStyles = [
   {
@@ -23,7 +23,7 @@ export const defaultStyles = [
 export const styleCalculators = {
   container: (style, phase) => style,
   oldPlay: (style, phase) => {
-    if (phase === IN) {
+    if (phase === switchMotionPhase.IN) {
       return {
         opacity: 1
       };
@@ -34,7 +34,7 @@ export const styleCalculators = {
     }
   },
   newPlay: (style, phase) => {
-    if (phase !== ENTERING) {
+    if (phase !== switchMotionPhase.ENTERING) {
       return {
         opacity: 0
       };
@@ -49,12 +49,13 @@ export const styleCalculators = {
 export const nextPhaseCheckers = {
   container: () => false,
   oldPlay: (phase, style) => {
-    if (phase === LEAVING && style.opacity === 0) return true;
-    if (phase === OUT) return true;
+    if (phase === switchMotionPhase.LEAVING && style.opacity === 0) return true;
+    if (phase === switchMotionPhase.OUT) return true;
     return false;
   },
   newPlay: (phase, style) => {
-    if (phase === ENTERING && style.opacity === 1) return true;
+    if (phase === switchMotionPhase.ENTERING && style.opacity === 1)
+      return true;
     return false;
   }
 };
@@ -71,7 +72,11 @@ export const numberToStyle = (key, style, phase) => {
         {
           width: "100%",
           height: "100%",
-          display: phase === IN || phase === LEAVING ? "block" : "none"
+          display:
+            phase === switchMotionPhase.IN ||
+            phase === switchMotionPhase.LEAVING
+              ? "block"
+              : "none"
         },
         style,
         { opacity: String(style.opacity) }
@@ -81,7 +86,11 @@ export const numberToStyle = (key, style, phase) => {
         {
           width: "100%",
           height: "100%",
-          display: phase === OUT || phase === ENTERING ? "block" : "none"
+          display:
+            phase === switchMotionPhase.OUT ||
+            phase === switchMotionPhase.ENTERING
+              ? "block"
+              : "none"
         },
         style,
         { opacity: String(style.opacity) }

@@ -1,4 +1,4 @@
-import { ENTERING, IN, LEAVING, OUT } from "../../animationPhase";
+import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
 export function isCurPhaseEnd(phase, prevStyles, nextPhaseCheckers) {
   return prevStyles.find(styleObj => {
     let { key, style } = styleObj;

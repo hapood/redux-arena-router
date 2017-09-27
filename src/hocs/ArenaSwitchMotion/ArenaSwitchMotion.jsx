@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { TransitionMotion } from "react-motion";
-import { ENTERING, IN, LEAVING, OUT } from "../../animationPhase";
+import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
 import { calcKeys, buildStyleCalculator, isCurPhaseEnd } from "./utils";
 
 export default class ArenaSwitchAnimation extends Component {
@@ -22,7 +22,7 @@ export default class ArenaSwitchAnimation extends Component {
       })
     };
     Object.assign(this.state, calcKeys(this.props.newPlayKey));
-    this.state.calcStyles = buildStyleCalculator(
+    this.state.styleCalculator = buildStyleCalculator(
       this.props.phase,
       this.props.styleCalculators,
       this.props.nextPhaseCheckers,
@@ -48,7 +48,7 @@ export default class ArenaSwitchAnimation extends Component {
       nextProps.styleCalculators !== this.props.styleCalculators ||
       nextProps.nextPhaseCheckers !== this.props.nextPhaseCheckers
     ) {
-      this.state.calcStyles = buildStyleCalculator(
+      this.state.styleCalculator = buildStyleCalculator(
         nextProps.phase,
         nextProps.styleCalculators,
         nextProps.nextPhaseCheckers,
@@ -77,24 +77,16 @@ export default class ArenaSwitchAnimation extends Component {
   }
 
   render() {
-    let {
-      phase,
-      actions,
-      containerStyleCalcer,
-      oldPlayStyleCalcer,
-      newPlayStyleCalcer,
-      nextPhaseCheckers,
-      numberToStyle
-    } = this.props;
+    let { phase, numberToStyle } = this.props;
     let { newPlayKey, oldPlayKey } = this.state;
     return (
       <TransitionMotion
         defaultStyles={this.state.defaultStyles}
         willLeave={this.willLeave}
-        styles={this.state.calcStyles}
+        styles={this.state.styleCalculator}
       >
         {interpolatedStyles => {
-          let containerStyle, newPlayStyle, oldPlayStyle, motionPhase;
+          let containerStyle, newPlayStyle, oldPlayStyle, animationPhase;
           interpolatedStyles.forEach(styleObj => {
             let { key, style } = styleObj;
             switch (key) {
@@ -108,24 +100,24 @@ export default class ArenaSwitchAnimation extends Component {
                 newPlayStyle = style;
                 break;
               case "nextPhase":
-                motionPhase = style.phase;
+                animationPhase = style.phase;
                 break;
             }
           });
           return (
             <div
-              style={numberToStyle("container", containerStyle, motionPhase)}
+              style={numberToStyle("container", containerStyle, animationPhase)}
             >
               {this.props.children}
               <div
                 key={oldPlayKey}
-                style={numberToStyle("oldPlay", oldPlayStyle, motionPhase)}
+                style={numberToStyle("oldPlay", oldPlayStyle, animationPhase)}
               >
                 {this.props[oldPlayKey].element}
               </div>
               <div
                 key={newPlayKey}
-                style={numberToStyle("newPlay", newPlayStyle, motionPhase)}
+                style={numberToStyle("newPlay", newPlayStyle, animationPhase)}
               >
                 {this.props[newPlayKey].element}
               </div>
