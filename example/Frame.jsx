@@ -2,6 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { BrowserRouter, Switch, Link } from "react-router-dom";
 import { ArenaSwitchMotion, ArenaRoute } from "redux-arena-router";
+import {
+  defaultStyles,
+  styleCalculators,
+  numberToStyle,
+  nextPhaseCheckers
+} from "./switchAnimation";
 import pageABundle from "./pageA";
 
 const asyncPageBBundle = import("./PageB");
@@ -24,7 +30,12 @@ export default class Frame extends Component {
             <hr />
             <div>
               <div style={{ marginTop: "1rem" }}>
-                <ArenaSwitchMotion>
+                <ArenaSwitchMotion
+                  defaultStyles={defaultStyles}
+                  styleCalculators={styleCalculators}
+                  numberToStyle={numberToStyle}
+                  nextPhaseCheckers={nextPhaseCheckers}
+                >
                   <Switch>
                     <ArenaRoute
                       path="/redux-arena/pageA"

@@ -5,43 +5,25 @@ import {
   ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
   ARENA_SWITCH_ANIMATION_PLAY_NEXT
 } from "./actionType";
-import { ARENA_SCENEBUNDLE_PLAY_START } from "redux-arena/actionTypes";
-import { ENTERING, IN, PRE_LEAVE, LEAVING, OUT } from "./anamitionPhase";
+import { ENTERING, IN, PRE_LEAVE, LEAVING, OUT } from "./animationPhase";
 import { PLAT_LATEST, PLAT_NEXT } from "./playStrategy";
 
-export default function(state = initState, action, sceneReducerKey) {
-  switch (action.type) {
-    case ARENA_SCENEBUNDLE_PLAY_START:
-      if (state.play1.playId === action.notifyData.playId) {
-        return Object.assign({}, state, { isReadyPlay1: true });
-      } else if (state.play2.playId === action.notifyData.playId) {
-        return Object.assign({}, state, { isReadyPlay2: true });
-      } else {
-        return state;
-      }
-  }
-  if (action._sceneReducerKey !== sceneReducerKey) return state;
+export default function(state = initState, action) {
   switch (action.type) {
     case ARENA_SWITCH_ANIMATION_NEXTPHRASE:
       let { phase, oldPlayKey, oldPlay } = action;
       if (state.phase !== phase || state[oldPlayKey] !== oldPlay) return state;
       switch (state.phase) {
         case ENTERING:
-          let newPlayKey, oldReadyKey, newReadyKey;
+          let newPlayKey;
           if (state.newPlayKey === "play2") {
             newPlayKey = "play1";
-            newReadyKey = "isReadyPlay1";
-            oldReadyKey = "isReadyPlay2";
           } else {
             newPlayKey = "play2";
-            newReadyKey = "isReadyPlay2";
-            oldReadyKey = "isReadyPlay2";
           }
           return Object.assign({}, state, {
             phase: IN,
             [newPlayKey]: {},
-            [newReadyKey]: true,
-            [oldReadyKey]: state[newReadyKey],
             newPlayKey
           });
         case PRE_LEAVE:
@@ -68,10 +50,8 @@ export default function(state = initState, action, sceneReducerKey) {
         return state;
       }
       if (state.playlist.length > 0) {
-        if (state.newPlayKey === "play2") {
-          newState.isReadyPlay2 = false;
-        } else {
-          newState.isReadyPlay1 = false;
+        if (state.play1.element == null && state.play2.element == null) {
+          newState.phase = OUT;
         }
         switch (action.playStrategy) {
           case PLAT_NEXT:
