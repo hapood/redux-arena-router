@@ -1,11 +1,5 @@
 import { spring, presets } from "react-motion";
-import {
-  ENTERING,
-  IN,
-  PRE_LEAVE,
-  LEAVING,
-  OUT
-} from "redux-arena-router/animationPhase";
+import { ENTERING, IN, LEAVING, OUT } from "redux-arena-router/animationPhase";
 
 export const defaultStyles = [
   {
@@ -29,7 +23,7 @@ export const defaultStyles = [
 export const styleCalculators = {
   container: (style, phase) => style,
   oldPlay: (style, phase) => {
-    if (phase === IN || phase === PRE_LEAVE) {
+    if (phase === IN) {
       return {
         opacity: 1
       };
@@ -40,7 +34,7 @@ export const styleCalculators = {
     }
   },
   newPlay: (style, phase) => {
-    if (phase !== ENTERING && phase !== PRE_LEAVE) {
+    if (phase !== ENTERING) {
       return {
         opacity: 0
       };
@@ -55,7 +49,6 @@ export const styleCalculators = {
 export const nextPhaseCheckers = {
   container: () => false,
   oldPlay: (phase, style) => {
-    if (phase === PRE_LEAVE) return true;
     if (phase === LEAVING && style.opacity === 0) return true;
     if (phase === OUT) return true;
     return false;
@@ -78,10 +71,7 @@ export const numberToStyle = (key, style, phase) => {
         {
           width: "100%",
           height: "100%",
-          display:
-            phase === IN || phase === LEAVING || phase === PRE_LEAVE
-              ? "block"
-              : "none"
+          display: phase === IN || phase === LEAVING ? "block" : "none"
         },
         style,
         { opacity: String(style.opacity) }

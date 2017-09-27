@@ -1,44 +1,19 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Route } from "react-router-dom";
-import { ArenaScene } from "redux-arena";
-import arenaRouteSync from "./arenaRouteSync";
+import ArenaRouteSync from "./ArenaRouteSync";
 
 export default class ArenaRoute extends Component {
   static propTypes = {
-    reducerKey: PropTypes.string,
-    vReducerKey: PropTypes.string,
-    asyncSceneBuldle: PropTypes.any,
-    sceneBundle: PropTypes.any,
-    sceneProps: PropTypes.object,
-    isNotifyOn: PropTypes.bool,
-    notifyData: PropTypes.object,
     exact: PropTypes.bool,
     path: PropTypes.string,
-    strict: PropTypes.bool
+    strict: PropTypes.bool,
+    location: PropTypes.object,
+    children: PropTypes.element
   };
 
-  static defaultProps = {
-    isNotifyOn: true,
-    exact: true
-  };
-
-  rendToElement(props, ArenaSceneHOC, playId) {
-    let {
-      exact,
-      strict,
-      path,
-      computedMatch,
-      location,
-      notifyData,
-      isNotifyOn,
-      reducerKey,
-      vReducerKey,
-      asyncSceneBundle,
-      sceneBundle,
-      sceneProps,
-      arenaReducerDict
-    } = props;
+  rendToElement(props) {
+    let { exact, strict, path, computedMatch, location, actions } = props;
     return (
       <Route
         location={location}
@@ -47,41 +22,24 @@ export default class ArenaRoute extends Component {
         path={path}
         strict={strict}
         render={routeProps => {
-          return React.createElement(ArenaSceneHOC, {
-            isNotifyOn,
-            notifyData: Object.assign({}, routeProps, notifyData, {
-              arenaReducerDict,
-              playId
-            }),
-            reducerKey,
-            vReducerKey,
-            asyncSceneBundle,
-            sceneBundle,
-            sceneProps
-          });
+          return (
+            <ArenaRouteSync
+              setRouteState={actions.setState}
+              routeProps={routeProps}
+            >
+              {this.props.children}
+            </ArenaRouteSync>
+          );
         }}
       />
     );
   }
 
   componentWillMount() {
-    let { actions, animationDictItem } = this.props;
-    this.state = {
-      ArenaSceneHOC: arenaRouteSync(ArenaScene, actions.setState),
-      isObsolete: false
-    };
-    let symbol = Symbol(
-      Math.random()
-        .toString()
-        .slice(2, 10)
-    );
+    let { animationDictItem } = this.props;
     if (animationDictItem) {
-      this.state.playElement = this.rendToElement(
-        this.props,
-        this.state.ArenaSceneHOC,
-        symbol
-      );
-      animationDictItem.actions.addPlay(this.state.playElement, symbol);
+      this.state.playElement = this.rendToElement(this.props);
+      animationDictItem.actions.addPlay(this.state.playElement);
     }
   }
 
@@ -93,14 +51,10 @@ export default class ArenaRoute extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let { actions, animationDictItem } = nextProps;
-    if (actions !== this.props.actions) {
-      this.state.ArenaSceneHOC = arenaRouteSync(ArenaScene, actions.setState);
-      this.state.isObsolete = true;
-    }
+    let { animationDictItem, location } = nextProps;
     if (
       animationDictItem !== this.props.animationDictItem ||
-      nextProps.location !== this.props.location
+      location !== this.props.location
     ) {
       this.state.isObsolete = true;
     }
@@ -113,18 +67,9 @@ export default class ArenaRoute extends Component {
       if (animationDictItem) {
         animationDictItem.actions.removePlay(this.state.playElement);
       }
-      let symbol = Symbol(
-        Math.random()
-          .toString()
-          .slice(2, 10)
-      );
-      this.state.playElement = this.rendToElement(
-        this.props,
-        this.state.ArenaSceneHOC,
-        symbol
-      );
+      this.state.playElement = this.rendToElement(this.props);
       if (animationDictItem) {
-        animationDictItem.actions.addPlay(this.state.playElement, symbol);
+        animationDictItem.actions.addPlay(this.state.playElement);
       }
     }
   }

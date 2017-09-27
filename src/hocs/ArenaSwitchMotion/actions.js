@@ -22,12 +22,11 @@ export function nextPhase(phase, oldPlayKey, oldPlay) {
   };
 }
 
-export function addPlay(element, playId) {
+export function addPlay(element) {
   return {
     type: ARENA_SWITCH_ANIMATION_PLAY_ADD,
     entity: {
-      element,
-      playId
+      element
     }
   };
 }

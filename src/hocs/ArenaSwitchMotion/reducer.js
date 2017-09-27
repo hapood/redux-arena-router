@@ -5,7 +5,7 @@ import {
   ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
   ARENA_SWITCH_ANIMATION_PLAY_NEXT
 } from "./actionType";
-import { ENTERING, IN, PRE_LEAVE, LEAVING, OUT } from "./animationPhase";
+import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
 import { PLAT_LATEST, PLAT_NEXT } from "./playStrategy";
 
 export default function(state = initState, action) {
@@ -26,8 +26,6 @@ export default function(state = initState, action) {
             [newPlayKey]: {},
             newPlayKey
           });
-        case PRE_LEAVE:
-          return Object.assign({}, state, { phase: LEAVING });
         case LEAVING:
           return Object.assign({}, state, { phase: OUT });
         case OUT:
@@ -40,7 +38,7 @@ export default function(state = initState, action) {
         return state;
       let newState = Object.assign({}, state);
       if (state.phase === IN) {
-        newState.phase = PRE_LEAVE;
+        newState.phase = LEAVING;
       } else if (
         (state.phase === OUT || state.phase === IN) &&
         state.autoClearPlay != null
@@ -70,7 +68,7 @@ export default function(state = initState, action) {
       });
     case ARENA_SWITCH_ANIMATION_PLAY_REMOVE:
       if (state.phase == IN && state.play1 === action.element) {
-        return Object.assign({}, state, { phase: PRE_LEAVE });
+        return Object.assign({}, state, { phase: LEAVING });
       } else if (state[state.newPlayKey].element === action.element) {
         return Object.assign({}, state, { autoClearPlay: action.element });
       } else {

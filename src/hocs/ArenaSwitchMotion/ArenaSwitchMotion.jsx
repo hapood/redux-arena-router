@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { TransitionMotion } from "react-motion";
-import { ENTERING, IN, PRE_LEAVE, LEAVING, OUT } from "./animationPhase";
+import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
 import { calcKeys, buildStyleCalculator, isCurPhaseEnd } from "./utils";
 
 export default class ArenaSwitchAnimation extends Component {
