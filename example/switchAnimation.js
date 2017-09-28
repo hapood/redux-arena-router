@@ -1,5 +1,5 @@
 import { spring, presets } from "react-motion";
-import { switchMotionPhase } from "redux-arena-router/animationPhase";
+import { switchMotionPhase } from "redux-arena-router";
 
 export const defaultStyles = [
   {
@@ -9,13 +9,15 @@ export const defaultStyles = [
   {
     key: "oldPlay",
     style: {
-      opacity: 1
+      opacity: 1,
+      left: 0
     }
   },
   {
     key: "newPlay",
     style: {
-      opacity: 0
+      opacity: 0,
+      left: 15
     }
   }
 ];
@@ -25,22 +27,30 @@ export const styleCalculators = {
   oldPlay: (style, phase) => {
     if (phase === switchMotionPhase.IN) {
       return {
+        left: 0,
         opacity: 1
+      };
+    } else if (phase === switchMotionPhase.LEAVING) {
+      return {
+        opacity: spring(0, presets.stiff),
+        left: spring(-15, presets.stiff)
       };
     } else {
       return {
-        opacity: spring(0, presets.stiff)
+        opacity: -15
       };
     }
   },
   newPlay: (style, phase) => {
-    if (phase !== switchMotionPhase.ENTERING) {
+    if (phase === switchMotionPhase.ENTERING) {
       return {
-        opacity: 0
+        opacity: spring(1, presets.stiff),
+        left: spring(0, presets.stiff)
       };
     } else {
       return {
-        opacity: spring(1, presets.stiff)
+        opacity: 0,
+        left: 15
       };
     }
   }
@@ -48,15 +58,14 @@ export const styleCalculators = {
 
 export const nextPhaseCheckers = {
   container: () => false,
-  oldPlay: (phase, style) => {
-    if (phase === switchMotionPhase.LEAVING && style.opacity === 0) return true;
+  oldPlay: (style, phase) => {
+    if (phase === switchMotionPhase.LEAVING && style.opacity < 0.3) return true;
     if (phase === switchMotionPhase.OUT) return true;
     return false;
   },
-  newPlay: (phase, style) => {
+  newPlay: (style, phase) => {
     if (phase === switchMotionPhase.ENTERING && style.opacity === 1)
       return true;
-    return false;
   }
 };
 
@@ -65,35 +74,28 @@ export const numberToStyle = (key, style, phase) => {
     case "container":
       return {
         width: "400px",
-        height: "400px"
+        height: "400px",
+        position: "relative"
       };
     case "oldPlay":
       return Object.assign(
         {
           width: "100%",
           height: "100%",
-          display:
-            phase === switchMotionPhase.IN ||
-            phase === switchMotionPhase.LEAVING
-              ? "block"
-              : "none"
+          position: "absolute"
         },
         style,
-        { opacity: String(style.opacity) }
+        { opacity: String(style.opacity), left: style.left + "px" }
       );
     case "newPlay":
       return Object.assign(
         {
           width: "100%",
           height: "100%",
-          display:
-            phase === switchMotionPhase.OUT ||
-            phase === switchMotionPhase.ENTERING
-              ? "block"
-              : "none"
+          position: "absolute"
         },
         style,
-        { opacity: String(style.opacity) }
+        { opacity: String(style.opacity), left: style.left + "px" }
       );
     default:
       return style;

@@ -4,45 +4,60 @@ import {
   ARENA_SWITCH_ANIMATION_PLAY_ADD,
   ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
   ARENA_SWITCH_ANIMATION_PLAY_NEXT
-} from "./actionType";
+} from "./actionTypes";
 import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
 import { PLAT_LATEST, PLAT_NEXT } from "./playStrategy";
+function nextPhaseState(state, action) {
+  let { phase, oldPlayKey, oldPlay } = action;
+  if (state.phase !== phase || state[oldPlayKey] !== oldPlay) return state;
+  switch (state.phase) {
+    case ENTERING:
+      let newPlayKey;
+      if (state.newPlayKey === "play2") {
+        newPlayKey = "play1";
+      } else {
+        newPlayKey = "play2";
+      }
+      return Object.assign({}, state, {
+        phase: IN,
+        [newPlayKey]: {},
+        newPlayKey
+      });
+    case LEAVING:
+      return Object.assign({}, state, { phase: OUT });
+    case OUT:
+      return Object.assign({}, state, { phase: ENTERING });
+    default:
+      return state;
+  }
+}
+
+function playRemoveState(state, action) {
+  let oldPlayKey = state.newPlayKey === "play1" ? "play2" : "play1";
+  if (state.phase == IN && state[oldPlayKey] === action.element) {
+    return Object.assign({}, state, { phase: LEAVING });
+  } else if (state[state.newPlayKey].element === action.element) {
+    return Object.assign({}, state, { autoClearPlay: action.element });
+  } else {
+    return Object.assign({}, state, {
+      playlist: state.playlist.filter(
+        entity => entity.element !== action.element
+      )
+    });
+  }
+}
 
 export default function(state = initState, action) {
   switch (action.type) {
     case ARENA_SWITCH_ANIMATION_NEXTPHRASE:
-      let { phase, oldPlayKey, oldPlay } = action;
-      if (state.phase !== phase || state[oldPlayKey] !== oldPlay) return state;
-      switch (state.phase) {
-        case ENTERING:
-          let newPlayKey;
-          if (state.newPlayKey === "play2") {
-            newPlayKey = "play1";
-          } else {
-            newPlayKey = "play2";
-          }
-          return Object.assign({}, state, {
-            phase: IN,
-            [newPlayKey]: {},
-            newPlayKey
-          });
-        case LEAVING:
-          return Object.assign({}, state, { phase: OUT });
-        case OUT:
-          return Object.assign({}, state, { phase: ENTERING });
-        default:
-          return state;
-      }
+      return nextPhaseState(state, action);
     case ARENA_SWITCH_ANIMATION_PLAY_NEXT:
       if (state.playlist.length === 0 && state.autoClearPlay == null)
         return state;
       let newState = Object.assign({}, state);
       if (state.phase === IN) {
         newState.phase = LEAVING;
-      } else if (
-        (state.phase === OUT || state.phase === IN) &&
-        state.autoClearPlay != null
-      ) {
+      } else if (state.phase === OUT && state.autoClearPlay != null) {
         newState.autoClearPlay = null;
       } else {
         return state;
@@ -67,17 +82,7 @@ export default function(state = initState, action) {
         playlist: state.playlist.concat(action.entity)
       });
     case ARENA_SWITCH_ANIMATION_PLAY_REMOVE:
-      if (state.phase == IN && state.play1 === action.element) {
-        return Object.assign({}, state, { phase: LEAVING });
-      } else if (state[state.newPlayKey].element === action.element) {
-        return Object.assign({}, state, { autoClearPlay: action.element });
-      } else {
-        return Object.assign({}, state, {
-          playlist: state.playlist.filter(
-            entity => entity.element !== action.element
-          )
-        });
-      }
+      return playRemoveState(state, action);
     default:
       return state;
   }

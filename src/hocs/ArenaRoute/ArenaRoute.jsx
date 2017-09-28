@@ -37,8 +37,8 @@ export default class ArenaRoute extends Component {
 
   componentWillMount() {
     let { animationDictItem } = this.props;
+    this.state = { playElement: this.rendToElement(this.props) };
     if (animationDictItem) {
-      this.state.playElement = this.rendToElement(this.props);
       animationDictItem.actions.addPlay(this.state.playElement);
     }
   }
@@ -78,7 +78,7 @@ export default class ArenaRoute extends Component {
     if (this.props.animationDictItem) {
       return <div />;
     } else {
-      return this.rendToElement(this.props, this.state.ArenaSceneHOC);
+      return this.state.playElement;
     }
   }
 }

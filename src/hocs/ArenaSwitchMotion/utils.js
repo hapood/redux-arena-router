@@ -1,19 +1,19 @@
 import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
-export function isCurPhaseEnd(phase, prevStyles, nextPhaseCheckers) {
+export function isCurPhaseEnd(prevStyles, phase, nextPhaseCheckers) {
   return prevStyles.find(styleObj => {
     let { key, style } = styleObj;
     switch (key) {
       case "container":
         return nextPhaseCheckers.container
-          ? nextPhaseCheckers.container(phase, style)
+          ? nextPhaseCheckers.container(style, phase)
           : false;
       case "oldPlay":
         return nextPhaseCheckers.oldPlay
-          ? nextPhaseCheckers.oldPlay(phase, style)
+          ? nextPhaseCheckers.oldPlay(style, phase)
           : false;
       case "newPlay":
         return nextPhaseCheckers.newPlay
-          ? nextPhaseCheckers.newPlay(phase, style)
+          ? nextPhaseCheckers.newPlay(style, phase)
           : false;
       default:
         return false;
@@ -24,8 +24,8 @@ export function isCurPhaseEnd(phase, prevStyles, nextPhaseCheckers) {
 }
 
 export function buildStyleCalculator(
-  phase,
   styleCalculators,
+  phase,
   nextPhaseCheckers,
   nextPhase
 ) {
@@ -64,7 +64,7 @@ export function buildStyleCalculator(
             };
           }
           if (phase !== style.phase) {
-            if (isCurPhaseEnd(phase, prevStyles, nextPhaseCheckers)) {
+            if (isCurPhaseEnd(prevStyles, phase, nextPhaseCheckers)) {
               nextPhase(phase);
               return {
                 key: "nextPhase",

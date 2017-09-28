@@ -2,17 +2,27 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { BrowserRouter, Switch, Link } from "react-router-dom";
 import { ArenaSwitchMotion, ArenaRoute } from "redux-arena-router";
-import {
-  defaultStyles,
-  styleCalculators,
-  numberToStyle,
-  nextPhaseCheckers
-} from "./switchAnimation";
-import pageABundle from "./pageA";
-
-const asyncPageBBundle = import("./PageB");
+import { ArenaSceneMotion } from "redux-arena";
+import * as switchAnimation from "./switchAnimation";
+import * as sceneAnimation from "./sceneAnimation";
+import pageA from "./pageA";
+import pageB from "./pageB";
+import Loading from "./Loading";
 
 export default class Frame extends Component {
+  withSceneAnimation(sceneElemet) {
+    return (
+      <ArenaSceneMotion
+        loadingPlay={<Loading />}
+        defaultStyles={sceneAnimation.defaultStyles}
+        styleCalculators={sceneAnimation.styleCalculators}
+        numberToStyle={sceneAnimation.numberToStyle}
+        nextPhaseCheckers={sceneAnimation.nextPhaseCheckers}
+      >
+        {sceneElemet}
+      </ArenaSceneMotion>
+    );
+  }
   render() {
     let { cnt, addCnt, clearCnt } = this.props;
     return (
@@ -31,20 +41,18 @@ export default class Frame extends Component {
             <div>
               <div style={{ marginTop: "1rem" }}>
                 <ArenaSwitchMotion
-                  defaultStyles={defaultStyles}
-                  styleCalculators={styleCalculators}
-                  numberToStyle={numberToStyle}
-                  nextPhaseCheckers={nextPhaseCheckers}
+                  defaultStyles={switchAnimation.defaultStyles}
+                  styleCalculators={switchAnimation.styleCalculators}
+                  numberToStyle={switchAnimation.numberToStyle}
+                  nextPhaseCheckers={switchAnimation.nextPhaseCheckers}
                 >
                   <Switch>
-                    <ArenaRoute
-                      path="/redux-arena/pageA"
-                      sceneBundle={pageABundle}
-                    />
-                    <ArenaRoute
-                      path="/redux-arena/pageB"
-                      asyncSceneBundle={asyncPageBBundle}
-                    />
+                    <ArenaRoute key="1" path="/redux-arena/pageA">
+                      {this.withSceneAnimation(pageA)}
+                    </ArenaRoute>
+                    <ArenaRoute key="2" path="/redux-arena/pageB">
+                      {this.withSceneAnimation(pageB)}
+                    </ArenaRoute>
                   </Switch>
                 </ArenaSwitchMotion>
               </div>

@@ -23,8 +23,8 @@ export default class ArenaSwitchAnimation extends Component {
     };
     Object.assign(this.state, calcKeys(this.props.newPlayKey));
     this.state.styleCalculator = buildStyleCalculator(
-      this.props.phase,
       this.props.styleCalculators,
+      this.props.phase,
       this.props.nextPhaseCheckers,
       () =>
         setImmediate(() =>
@@ -49,8 +49,8 @@ export default class ArenaSwitchAnimation extends Component {
       nextProps.nextPhaseCheckers !== this.props.nextPhaseCheckers
     ) {
       this.state.styleCalculator = buildStyleCalculator(
-        nextProps.phase,
         nextProps.styleCalculators,
+        nextProps.phase,
         nextProps.nextPhaseCheckers,
         () =>
           setImmediate(() =>
@@ -68,11 +68,10 @@ export default class ArenaSwitchAnimation extends Component {
       );
       this.state.defaultStyles = nextProps.defaultStyles.concat(nextPhaseStyle);
     }
-    if (
-      (nextProps.phase === IN || nextProps.phase === OUT) &&
-      (nextProps.playlist.length > 0 || nextProps.autoClearPlay)
-    ) {
-      this.props.actions.playNext();
+    if (nextProps.phase === IN && nextProps.playlist.length > 0) {
+      nextProps.actions.playNext();
+    } else if (nextProps.phase === OUT && nextProps.autoClearPlay) {
+      nextProps.actions.playNext();
     }
   }
 

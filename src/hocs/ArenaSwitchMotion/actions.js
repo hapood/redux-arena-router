@@ -4,7 +4,7 @@ import {
   ARENA_SWITCH_ANIMATION_PLAY_REMOVE,
   ARENA_SWITCH_ANIMATION_PLAY_NEXT,
   ARENA_SWITCH_ANIMATION_NEXTPHRASE
-} from "./actionType";
+} from "./actionTypes";
 
 export function setState(state) {
   return {
