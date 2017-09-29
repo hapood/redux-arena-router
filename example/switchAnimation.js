@@ -1,7 +1,7 @@
 import { spring, presets } from "react-motion";
 import { switchMotionPhase } from "redux-arena-router";
 
-export const defaultStyles = [
+export const initStyles = [
   {
     key: "container",
     style: {}
@@ -37,7 +37,8 @@ export const styleCalculators = {
       };
     } else {
       return {
-        opacity: -15
+        left: 0,
+        opacity: 0
       };
     }
   },
@@ -58,14 +59,19 @@ export const styleCalculators = {
 
 export const nextPhaseCheckers = {
   container: () => false,
-  oldPlay: (style, phase) => {
-    if (phase === switchMotionPhase.LEAVING && style.opacity < 0.3) return true;
-    if (phase === switchMotionPhase.OUT) return true;
+  oldPlay: style => {
+    if (style.phase === switchMotionPhase.LEAVING && style.opacity < 0.3) {
+      return true;
+    }
+    if (style.phase === switchMotionPhase.OUT) {
+      return true;
+    }
     return false;
   },
-  newPlay: (style, phase) => {
-    if (phase === switchMotionPhase.ENTERING && style.opacity === 1)
+  newPlay: style => {
+    if (style.phase === switchMotionPhase.ENTERING && style.opacity === 1) {
       return true;
+    }
   }
 };
 

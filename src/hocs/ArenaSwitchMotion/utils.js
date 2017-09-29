@@ -1,19 +1,19 @@
 import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
-export function isCurPhaseEnd(prevStyles, phase, nextPhaseCheckers) {
+export function isCurPhaseEnd(prevStyles, nextPhaseCheckers) {
   return prevStyles.find(styleObj => {
     let { key, style } = styleObj;
     switch (key) {
       case "container":
         return nextPhaseCheckers.container
-          ? nextPhaseCheckers.container(style, phase)
+          ? nextPhaseCheckers.container(style)
           : false;
       case "oldPlay":
         return nextPhaseCheckers.oldPlay
-          ? nextPhaseCheckers.oldPlay(style, phase)
+          ? nextPhaseCheckers.oldPlay(style)
           : false;
       case "newPlay":
         return nextPhaseCheckers.newPlay
-          ? nextPhaseCheckers.newPlay(style, phase)
+          ? nextPhaseCheckers.newPlay(style)
           : false;
       default:
         return false;
@@ -21,6 +21,12 @@ export function isCurPhaseEnd(prevStyles, phase, nextPhaseCheckers) {
   }) == null
     ? false
     : true;
+}
+
+function calcStyle(style, phase, calculator) {
+  return Object.assign({}, calculator ? calculator(style, phase) : style, {
+    phase
+  });
 }
 
 export function buildStyleCalculator(
@@ -36,45 +42,28 @@ export function buildStyleCalculator(
         case "container":
           return {
             key: "container",
-            style: styleCalculators.container
-              ? styleCalculators.container(style, phase)
-              : style
+            style: calcStyle(style, phase, styleCalculators.container)
           };
         case "oldPlay":
           return {
             key: "oldPlay",
-            style: styleCalculators.oldPlay
-              ? styleCalculators.oldPlay(style, phase)
-              : style
+            style: calcStyle(style, phase, styleCalculators.oldPlay)
           };
         case "newPlay":
           return {
             key: "newPlay",
-            style: styleCalculators.newPlay
-              ? styleCalculators.newPlay(style, phase)
-              : style
+            style: calcStyle(style, phase, styleCalculators.newPlay)
           };
         case "nextPhase":
-          if (phase === IN) {
-            return {
-              key: "nextPhase",
-              style: {
-                phase
-              }
-            };
+          if (isCurPhaseEnd(prevStyles, nextPhaseCheckers)) {
+            nextPhase(style.phase);
           }
-          if (phase !== style.phase) {
-            if (isCurPhaseEnd(prevStyles, phase, nextPhaseCheckers)) {
-              nextPhase(phase);
-              return {
-                key: "nextPhase",
-                style: {
-                  phase
-                }
-              };
+          return {
+            key: "nextPhase",
+            style: {
+              phase
             }
-          }
-          return styleObj;
+          };
         default:
           return styleObj;
       }

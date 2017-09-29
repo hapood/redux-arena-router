@@ -14,7 +14,7 @@ export default class Frame extends Component {
     return (
       <ArenaSceneMotion
         loadingPlay={<Loading />}
-        defaultStyles={sceneAnimation.defaultStyles}
+        initStyles={sceneAnimation.initStyles}
         styleCalculators={sceneAnimation.styleCalculators}
         numberToStyle={sceneAnimation.numberToStyle}
         nextPhaseCheckers={sceneAnimation.nextPhaseCheckers}
@@ -41,7 +41,7 @@ export default class Frame extends Component {
             <div>
               <div style={{ marginTop: "1rem" }}>
                 <ArenaSwitchMotion
-                  defaultStyles={switchAnimation.defaultStyles}
+                  initStyles={switchAnimation.initStyles}
                   styleCalculators={switchAnimation.styleCalculators}
                   numberToStyle={switchAnimation.numberToStyle}
                   nextPhaseCheckers={switchAnimation.nextPhaseCheckers}

@@ -6,6 +6,9 @@ import { createArenaStore } from "redux-arena";
 
 const store = createArenaStore();
 
+document.getElementById("app").className = "";
+document.getElementById("loadingStyle").remove();
+
 let appDom = document.getElementById("app");
 
 const render = FrameComponent => {
@@ -13,10 +16,7 @@ const render = FrameComponent => {
     <Provider store={store}>
       <FrameComponent />
     </Provider>,
-    appDom,
-    function() {
-      document.getElementById("app").className = "";
-    }
+    appDom
   );
 };
 

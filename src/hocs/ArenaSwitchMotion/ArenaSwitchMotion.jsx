@@ -7,7 +7,7 @@ import { calcKeys, buildStyleCalculator, isCurPhaseEnd } from "./utils";
 export default class ArenaSwitchAnimation extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
-    defaultStyles: PropTypes.array.isRequired,
+    initStyles: PropTypes.array.isRequired,
     styleCalculators: PropTypes.object.isRequired,
     nextPhaseCheckers: PropTypes.object.isRequired,
     numberToStyle: PropTypes.func.isRequired
@@ -16,20 +16,26 @@ export default class ArenaSwitchAnimation extends Component {
   componentWillMount() {
     this.props.actions.playNext();
     this.state = {
-      defaultStyles: this.props.defaultStyles.concat({
-        key: "nextPhase",
-        style: { phase: IN }
-      })
+      initStyles: this.props.initStyles
+        .map(styleObj =>
+          Object.assign({}, styleObj, {
+            style: Object.assign({}, styleObj.style, { phase: IN })
+          })
+        )
+        .concat({
+          key: "nextPhase",
+          style: { phase: IN }
+        })
     };
     Object.assign(this.state, calcKeys(this.props.newPlayKey));
     this.state.styleCalculator = buildStyleCalculator(
       this.props.styleCalculators,
       this.props.phase,
       this.props.nextPhaseCheckers,
-      () =>
+      phase =>
         setImmediate(() =>
           this.props.actions.nextPhase(
-            this.props.phase,
+            phase,
             this.state.oldPlayKey,
             this.props[this.state.oldPlayKey]
           )
@@ -52,21 +58,21 @@ export default class ArenaSwitchAnimation extends Component {
         nextProps.styleCalculators,
         nextProps.phase,
         nextProps.nextPhaseCheckers,
-        () =>
+        phase =>
           setImmediate(() =>
             nextProps.actions.nextPhase(
-              nextProps.phase,
+              phase,
               this.state.oldPlayKey,
               nextProps[this.state.oldPlayKey]
             )
           )
       );
     }
-    if (nextProps.defaultStyles !== this.props.defaultStyles) {
-      let nextPhaseStyle = this.state.defaultStyles.find(
+    if (nextProps.initStyles !== this.props.initStyles) {
+      let nextPhaseStyle = this.state.initStyles.find(
         style => style.key === "nextPhase"
       );
-      this.state.defaultStyles = nextProps.defaultStyles.concat(nextPhaseStyle);
+      this.state.initStyles = nextProps.initStyles.concat(nextPhaseStyle);
     }
     if (nextProps.phase === IN && nextProps.playlist.length > 0) {
       nextProps.actions.playNext();
@@ -80,7 +86,7 @@ export default class ArenaSwitchAnimation extends Component {
     let { newPlayKey, oldPlayKey } = this.state;
     return (
       <TransitionMotion
-        defaultStyles={this.state.defaultStyles}
+        defaultStyles={this.state.initStyles}
         willLeave={this.willLeave}
         styles={this.state.styleCalculator}
       >
