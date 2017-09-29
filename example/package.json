@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "npm run clean:build &&webpack --colors --config webpack.config.prod.js",
+    "build":
+      "npm run clean:build &&webpack --colors --config webpack.config.prod.js",
     "clean:build": "rimraf dist",
     "start:dist": "node expressServer.js"
   },
@@ -20,15 +21,11 @@
   "homepage": "https://github.com/hapood/redux-arena#readme",
   "dependencies": {
     "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-jss": "^7.2.0",
-    "react-motion": "^0.5.1",
-    "redux-arena": "^0.6.3",
-    "redux-devtools-chart-monitor": "^1.6.1",
-    "redux-devtools-diff-monitor": "^5.0.5",
-    "redux-devtools-dock-monitor": "^1.1.2",
-    "redux-thunk": "^2.2.0"
+    "redux-arena": "^0.7.0-beta",
+    "redux-arena-router": "^0.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -41,7 +38,6 @@
     "html-webpack-plugin": "^2.30.1",
     "node-libs-browser": "^2.0.0",
     "react-hot-loader": "^3.0.0-beta.1",
-    "redux-devtools": "^3.4.0",
     "script-ext-html-webpack-plugin": "^1.8.5",
     "webpack": "^3.5.6",
     "webpack-dev-server": "^2.7.1"
