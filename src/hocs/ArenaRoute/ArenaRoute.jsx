@@ -37,10 +37,12 @@ export default class ArenaRoute extends Component {
 
   componentWillMount() {
     let { animationDictItem } = this.props;
-    this.state = { playElement: this.rendToElement(this.props) };
-    if (animationDictItem) {
-      animationDictItem.actions.addPlay(this.state.playElement);
-    }
+    let state = { playElement: this.rendToElement(this.props) };
+    this.setState(state, () => {
+      if (animationDictItem) {
+        animationDictItem.actions.addPlay(this.state.playElement);
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -56,21 +58,25 @@ export default class ArenaRoute extends Component {
       animationDictItem !== this.props.animationDictItem ||
       location !== this.props.location
     ) {
-      this.state.isObsolete = true;
+      this.setState({ isObsolete: true });
     }
   }
 
   componentDidUpdate() {
     if (this.state.isObsolete) {
-      this.state.isObsolete = false;
       let { animationDictItem } = this.props;
       if (animationDictItem) {
         animationDictItem.actions.removePlay(this.state.playElement);
       }
-      this.state.playElement = this.rendToElement(this.props);
-      if (animationDictItem) {
-        animationDictItem.actions.addPlay(this.state.playElement);
-      }
+      let state = {
+        isObsolete: false,
+        playElement: this.rendToElement(this.props)
+      };
+      this.setState(state, () => {
+        if (animationDictItem) {
+          animationDictItem.actions.addPlay(this.state.playElement);
+        }
+      });
     }
   }
 
