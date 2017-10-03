@@ -128,22 +128,30 @@
     }
 
     .spinner {
-        margin-top: calc(50% - 200px);
-        margin-left: calc(50% - 25px);
+        width: 50px;
+        height: 50px;
         position: relative;
     }
 
     .text {
         width: 100%;
-        padding-top: 100px;
+        padding-top: 16px;
         text-align: center;
-        margin-top: 100px;
         font-size: 24px
     }
 
     .container {
-        height: 100%;
-        width: 100%
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .compose {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 </style>
 
@@ -159,25 +167,27 @@
 
 <body style="box-sizing: border-box;margin: 0;padding: 0;">
     <div id="app" class="container">
-        <div id="app" class="spinner">
-            <div class="cube cube0"></div>
-            <div class="cube cube1"></div>
-            <div class="cube cube2"></div>
-            <div class="cube cube3"></div>
-            <div class="cube cube4"></div>
-            <div class="cube cube5"></div>
-            <div class="cube cube6"></div>
-            <div class="cube cube7"></div>
-            <div class="cube cube8"></div>
-            <div class="cube cube9"></div>
-            <div class="cube cube10"></div>
-            <div class="cube cube11"></div>
-            <div class="cube cube12"></div>
-            <div class="cube cube13"></div>
-            <div class="cube cube14"></div>
-            <div class="cube cube15"></div>
+        <div class="compose">
+            <div class="spinner">
+                <div class="cube cube0"></div>
+                <div class="cube cube1"></div>
+                <div class="cube cube2"></div>
+                <div class="cube cube3"></div>
+                <div class="cube cube4"></div>
+                <div class="cube cube5"></div>
+                <div class="cube cube6"></div>
+                <div class="cube cube7"></div>
+                <div class="cube cube8"></div>
+                <div class="cube cube9"></div>
+                <div class="cube cube10"></div>
+                <div class="cube cube11"></div>
+                <div class="cube cube12"></div>
+                <div class="cube cube13"></div>
+                <div class="cube cube14"></div>
+                <div class="cube cube15"></div>
+            </div>
+            <div class="text">Loading</div>
         </div>
-        <div class="text">Loading</div>
     </div>
 </body>
 

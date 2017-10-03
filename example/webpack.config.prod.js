@@ -9,10 +9,10 @@ module.exports = {
     babelPolyfill: "babel-polyfill"
   },
   output: {
-    path: path.join(__dirname, "dist"),
+    path: path.join(__dirname, "build"),
     filename: "[name].[hash].js",
     chunkFilename: "[name].[id].[hash].js",
-    publicPath: "/redux-arena/"
+    publicPath: "/redux-arena-router/"
   },
   resolve: {
     extensions: [".js", ".jsx"]

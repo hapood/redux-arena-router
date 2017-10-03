@@ -4077,13 +4077,12 @@ readdirp@^2.0.0:
     set-immediate-shim "^1.0.1"
 
 redux-arena@^0.7.0:
-  version "0.7.0-beta"
-  resolved "https://registry.npmjs.org/redux-arena/-/redux-arena-0.7.0-beta.tgz#3aa3ed520864703975a473f643ee9235487918d5"
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/redux-arena/-/redux-arena-0.7.0.tgz#16ff24a47f9cfa7347b2710e6ad378efb5341b00"
   dependencies:
-    prop-types "^15.5.10"
+    prop-types "^15.6.0"
     react-motion "^0.5.1"
     react-redux "^5.0.6"
-    react-router-dom "^4.2.2"
     redux "^3.7.2"
     redux-saga "^0.15.6"
 

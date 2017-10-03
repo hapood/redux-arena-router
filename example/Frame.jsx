@@ -31,10 +31,10 @@ export default class Frame extends Component {
           <div>
             <ul>
               <li>
-                <Link to="/redux-arena/PageA">PageA</Link>
+                <Link to="/redux-arena-router/PageA">PageA</Link>
               </li>
               <li>
-                <Link to="/redux-arena/PageB">PageB</Link>
+                <Link to="/redux-arena-router/PageB">PageB</Link>
               </li>
             </ul>
             <hr />
@@ -47,10 +47,10 @@ export default class Frame extends Component {
                   nextPhaseCheckers={switchAnimation.nextPhaseCheckers}
                 >
                   <Switch>
-                    <ArenaRoute key="1" path="/redux-arena/pageA">
+                    <ArenaRoute key="1" path="/redux-arena-router/pageA">
                       {this.withSceneAnimation(pageA)}
                     </ArenaRoute>
-                    <ArenaRoute key="2" path="/redux-arena/pageB">
+                    <ArenaRoute key="2" path="/redux-arena-router/pageB">
                       {this.withSceneAnimation(pageB)}
                     </ArenaRoute>
                   </Switch>
