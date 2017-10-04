@@ -24,7 +24,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-jss": "^7.2.0",
-    "redux-arena": "^0.7.0-beta",
+    "redux-arena": "^0.7.0",
     "redux-arena-router": "^0.0.1"
   },
   "devDependencies": {

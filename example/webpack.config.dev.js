@@ -34,9 +34,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html", // Load a custom template
       inject: "body", // Inject all scripts into the body
-      title: "redux-arena",
+      title: "redux-arena-router",
       filename: "index.html",
-      base: "/redux-arena"
+      base: "/redux-arena-router"
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),

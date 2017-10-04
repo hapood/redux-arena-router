@@ -31,8 +31,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html", // Load a custom template
       inject: "body", // Inject all scripts into the body
-      title: "redux-arena",
-      base: "/redux-arena",
+      title: "redux-arena-router",
+      base: "/redux-arena-router",
       filename: "index.html",
       chunksSortMode: function(c1, c2) {
         var orders = ["manifest", "vendor", "babelPolyfill", "app"];
