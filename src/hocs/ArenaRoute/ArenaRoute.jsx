@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Route } from "react-router-dom";
+import { ReducerDictOverrider } from "redux-arena";
 import ArenaRouteSync from "./ArenaRouteSync";
 
 export default class ArenaRoute extends Component {
@@ -12,9 +13,14 @@ export default class ArenaRoute extends Component {
     children: PropTypes.element
   };
 
-  rendToElement(props) {
+  static contextTypes = {
+    store: PropTypes.any,
+    arenaReducerDict: PropTypes.object
+  };
+
+  rendToElement(props, reducerDict) {
     let { exact, strict, path, computedMatch, location, actions } = props;
-    return (
+    let routeElem = (
       <Route
         location={location}
         computedMatch={computedMatch}
@@ -33,11 +39,25 @@ export default class ArenaRoute extends Component {
         }}
       />
     );
+    if (reducerDict) {
+      return (
+        <ReducerDictOverrider reducerDict={reducerDict}>
+          {routeElem}
+        </ReducerDictOverrider>
+      );
+    } else {
+      return routeElem;
+    }
   }
 
   componentWillMount() {
     let { animationDictItem } = this.props;
-    let state = { playElement: this.rendToElement(this.props) };
+    let state = {
+      playElement: this.rendToElement(
+        this.props,
+        animationDictItem ? this.context.arenaReducerDict : null
+      )
+    };
     this.setState(state, () => {
       if (animationDictItem) {
         animationDictItem.actions.addPlay(this.state.playElement);
@@ -70,7 +90,10 @@ export default class ArenaRoute extends Component {
       }
       let state = {
         isObsolete: false,
-        playElement: this.rendToElement(this.props)
+        playElement: this.rendToElement(
+          this.props,
+          animationDictItem ? this.context.arenaReducerDict : null
+        )
       };
       this.setState(state, () => {
         if (animationDictItem) {

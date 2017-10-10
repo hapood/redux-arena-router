@@ -7,13 +7,13 @@ import * as switchAnimation from "./switchAnimation";
 import * as sceneAnimation from "./sceneAnimation";
 import pageA from "./pageA";
 import pageB from "./pageB";
-import Loading from "./Loading";
+import LoadingPage from "./LoadingPage";
 
 export default class Frame extends Component {
   withSceneAnimation(sceneElemet) {
     return (
       <ArenaSceneMotion
-        loadingPlay={<Loading />}
+        loadingPlay={<LoadingPage />}
         initStyles={sceneAnimation.initStyles}
         styleCalculators={sceneAnimation.styleCalculators}
         numberToStyle={sceneAnimation.numberToStyle}

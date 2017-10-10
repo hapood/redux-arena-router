@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styles from "./styles";
 import injectSheet from "react-jss";
 
-class Frame extends Component {
+class LoadingPage extends Component {
   render() {
     let { classes } = this.props;
     return (
@@ -16,4 +16,4 @@ class Frame extends Component {
   }
 }
 
-export default injectSheet(styles)(Frame);
+export default injectSheet(styles)(LoadingPage);

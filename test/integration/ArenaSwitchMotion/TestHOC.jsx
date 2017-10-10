@@ -12,6 +12,7 @@ export default class TestHOC extends Component {
   };
 
   render() {
+    console.log(ArenaRoute)
     let props = this.props;
     return (
       <Provider store={props.store}>
