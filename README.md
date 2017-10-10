@@ -12,7 +12,7 @@ High order components of react-router based on redux-arena-router
 npm install redux-arena-router --save
 ```
 
-## [Example](https://hapood.github.io/redux-arena/)
+## [Example](https://hapood.github.io/redux-arena-router/)
 
 A complete example is under `/example` directory, including a lot of HOC. And add redux-devtools for state changing show.
 Online example can be found here: [Here](https://hapood.github.io/redux-arena-router/)
