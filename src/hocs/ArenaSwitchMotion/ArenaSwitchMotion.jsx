@@ -123,12 +123,14 @@ export default class ArenaSwitchAnimation extends Component {
               >
                 {this.props[oldPlayKey].element}
               </div>
-              <div
-                key={newPlayKey}
-                style={numberToStyle("newPlay", newPlayStyle, animationPhase)}
-              >
-                {this.props[newPlayKey].element}
-              </div>
+              {animationPhase === IN ? null : (
+                <div
+                  key={newPlayKey}
+                  style={numberToStyle("newPlay", newPlayStyle, animationPhase)}
+                >
+                  {this.props[newPlayKey].element}
+                </div>
+              )}
             </div>
           );
         }}

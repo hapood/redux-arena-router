@@ -1,6 +1,6 @@
 {
   "name": "redux-arena-router",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "High order components of react-router based on redux-arena",
   "scripts": {
     "build:cjs":
