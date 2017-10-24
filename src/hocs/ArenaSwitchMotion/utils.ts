@@ -1,19 +1,37 @@
-import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
-export function isCurPhaseEnd(prevStyles, nextPhaseCheckers) {
+import AnimationPhases from "./AnimationPhases";
+import {
+  TransitionPlainStyle,
+  TransitionStyle,
+  PlainStyle,
+  Style
+} from "react-motion";
+import {
+  CombinedStyleCalculator,
+  StyleCalculators,
+  StyleCalculator,
+  NextPhaseCheckers,
+  ExtendedPlainMotionStyle,
+  ExtendedMotionStyle
+} from "./types";
+
+export function isCurPhaseEnd(
+  prevStyles: ExtendedPlainMotionStyle[],
+  nextPhaseCheckers: NextPhaseCheckers
+) {
   return prevStyles.find(styleObj => {
     let { key, style } = styleObj;
     switch (key) {
       case "container":
         return nextPhaseCheckers.container
-          ? nextPhaseCheckers.container(style)
+          ? nextPhaseCheckers.container(style) === true ? true : false
           : false;
       case "oldPlay":
         return nextPhaseCheckers.oldPlay
-          ? nextPhaseCheckers.oldPlay(style)
+          ? nextPhaseCheckers.oldPlay(style) === true ? true : false
           : false;
       case "newPlay":
         return nextPhaseCheckers.newPlay
-          ? nextPhaseCheckers.newPlay(style)
+          ? nextPhaseCheckers.newPlay(style) === true ? true : false
           : false;
       default:
         return false;
@@ -23,20 +41,24 @@ export function isCurPhaseEnd(prevStyles, nextPhaseCheckers) {
     : true;
 }
 
-function calcStyle(style, phase, calculator) {
+function calcStyle(
+  style: PlainStyle,
+  phase: AnimationPhases,
+  calculator: StyleCalculator
+): Style {
   return Object.assign({}, calculator ? calculator(style, phase) : style, {
     phase
   });
 }
 
 export function buildStyleCalculator(
-  styleCalculators,
-  phase,
-  nextPhaseCheckers,
-  nextPhase
-) {
-  return function(prevStyles) {
-    return prevStyles.map(styleObj => {
+  styleCalculators: StyleCalculators,
+  phase: AnimationPhases,
+  nextPhaseCheckers: NextPhaseCheckers,
+  nextPhase: (curPhase: AnimationPhases) => void
+): CombinedStyleCalculator {
+  return function(prevStyles: ExtendedPlainMotionStyle[]) {
+    return <ExtendedMotionStyle[]>prevStyles.map(styleObj => {
       let { key, style } = styleObj;
       switch (key) {
         case "container":
@@ -63,7 +85,7 @@ export function buildStyleCalculator(
             style: {
               phase
             }
-          };
+          } as ExtendedPlainMotionStyle;
         default:
           return styleObj;
       }
@@ -71,7 +93,7 @@ export function buildStyleCalculator(
   };
 }
 
-export function calcKeys(newPlayKey) {
+export function calcKeys(newPlayKey: "play1" | "play2") {
   if (newPlayKey === "play2")
     return {
       newPlayKey,

@@ -1,13 +1,14 @@
-import React from "react";
+import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 import { spy } from "sinon";
 import createHistory from "history/createBrowserHistory";
-import { createMount } from "../../testUtils";
-import { switchMotionPhase } from "src";
-import { createArenaStore } from "redux-arena";
-import TestHOC from "./TestHOC";
+import createSwitchMotionMounter from "./createSwitchMotionMounter";
+import { SwitchMotionPhase } from "src";
+import { createArenaStore, EnhancedStore } from "redux-arena";
+import { History } from "history";
+import { MountSwitchMotion } from "./types";
 
-function selectAnimationState(allStates, name) {
+function selectAnimationState(allStates: any): any {
   let animationState;
   Object.keys(allStates).forEach(key => {
     if (allStates[key].phase != null) {
@@ -18,22 +19,26 @@ function selectAnimationState(allStates, name) {
 }
 
 describe("<ArenaSceneMotion /> integration", () => {
-  let store, mount, wrapper, history;
+  let store: EnhancedStore,
+    wrapper: ReactWrapper,
+    mount: MountSwitchMotion,
+    cleanUp: () => void,
+    history: History;
 
   before(() => {
     history = createHistory();
-    mount = createMount();
+    [mount, cleanUp] = createSwitchMotionMounter();
     store = createArenaStore();
   });
 
   after(() => {
-    mount.cleanUp();
+    cleanUp();
     store.close();
   });
 
   it("should loop phase correctly", () => {
-    let queue = [switchMotionPhase.OUT, switchMotionPhase.IN];
-    wrapper = mount(<TestHOC store={store} history={history} />);
+    let queue = [SwitchMotionPhase.OUT, SwitchMotionPhase.IN];
+    wrapper = mount(store, history);
     let flagPromise = new Promise(resolve => {
       let unsubscribe = store.subscribe(() => {
         let animationState = selectAnimationState(store.getState());
@@ -47,7 +52,7 @@ describe("<ArenaSceneMotion /> integration", () => {
         }
       });
     });
-    history.push("/pageA")
+    history.push("/pageA");
     return flagPromise;
   });
 });

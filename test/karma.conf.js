@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Sat Jul 29 2017 16:06:43 GMT+0800 (中国标准时间)
-const webpack = require("webpack");
-const path = require("path");
+let webpack = require("webpack");
+let path = require("path");
 
 module.exports = function(config) {
   config.set({
@@ -10,13 +10,10 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ["mocha"],
+    frameworks: ["mocha", "chai", "sinon"],
 
     // list of files / patterns to load in the browser
-    files: [
-      "../node_modules/babel-polyfill/dist/polyfill.min.js",
-      "test.webpack.js"
-    ],
+    files: ["test.webpack.js"],
 
     // list of files to exclude
     exclude: [],
@@ -71,21 +68,25 @@ module.exports = function(config) {
     webpack: {
       resolve: {
         alias: { src: path.resolve(__dirname, "../src") },
-        extensions: [".js", ".jsx"]
+        extensions: [".js", ".jsx", ".ts", ".tsx"]
       },
       devtool: "inline-source-map",
       module: {
         loaders: [
-          { test: /\.jsx?$/, loader: "babel-loader", exclude: /node_modules/ },
           {
-            test: /\.jsx?$/,
+            test: /\.tsx?$/,
+            exclude: /node_modules/,
+            loader: "ts-loader"
+          },
+          {
+            test: /\.tsx?$/,
             use: {
               loader: "istanbul-instrumenter-loader",
               options: { esModules: true }
             },
             enforce: "post",
-            include: path.resolve("src/"),
-            exclude: /node_modules|\.spec\.js$/
+            include: path.resolve(__dirname, "../src"),
+            exclude: /node_modules|\.spec\.ts$/
           }
         ]
       }

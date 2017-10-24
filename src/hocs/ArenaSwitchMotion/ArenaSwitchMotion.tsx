@@ -1,32 +1,34 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as React from "react";
 import { TransitionMotion } from "react-motion";
-import { ENTERING, IN, LEAVING, OUT } from "./animationPhase";
+import AnimationPhases from "./AnimationPhases";
 import { calcKeys, buildStyleCalculator, isCurPhaseEnd } from "./utils";
+import {
+  ArenaSwitchAnimationConnectedProps,
+  State,
+  ExtendedMotionStyle,
+  CombinedStyleCalculator
+} from "./types";
 
-export default class ArenaSwitchAnimation extends Component {
-  static propTypes = {
-    children: PropTypes.element.isRequired,
-    initStyles: PropTypes.array.isRequired,
-    styleCalculators: PropTypes.object.isRequired,
-    nextPhaseCheckers: PropTypes.object.isRequired,
-    numberToStyle: PropTypes.func.isRequired
-  };
+export type InnerState = {
+  initStyles: ExtendedMotionStyle[];
+  styleCalculator: CombinedStyleCalculator;
+  playElement: React.ReactElement<{}> | null;
+  oldPlayKey: "play1" | "play2";
+  newPlayKey: "play1" | "play2";
+};
 
+export default class ArenaSwitchAnimation extends React.Component<
+  ArenaSwitchAnimationConnectedProps,
+  InnerState
+> {
   componentWillMount() {
     this.props.actions.playNext();
     let state = {
-      initStyles: this.props.initStyles
-        .map(styleObj =>
-          Object.assign({}, styleObj, {
-            style: Object.assign({}, styleObj.style, { phase: IN })
-          })
-        )
-        .concat({
-          key: "nextPhase",
-          style: { phase: IN }
-        })
-    };
+      initStyles: (this.props.initStyles as ExtendedMotionStyle[]).concat({
+        key: "nextPhase",
+        style: { phase: AnimationPhases.IN }
+      })
+    } as InnerState;
     Object.assign(state, calcKeys(this.props.newPlayKey));
     state.styleCalculator = buildStyleCalculator(
       this.props.styleCalculators,
@@ -44,8 +46,8 @@ export default class ArenaSwitchAnimation extends Component {
     this.setState(state);
   }
 
-  componentWillReceiveProps(nextProps) {
-    let state = Object.assign({}, this.state);
+  componentWillReceiveProps(nextProps: ArenaSwitchAnimationConnectedProps) {
+    let state: InnerState = Object.assign({}, this.state);
     if (nextProps.newPlayKey !== this.props.newPlayKey) {
       Object.assign(state, calcKeys(nextProps.newPlayKey));
     }
@@ -71,63 +73,59 @@ export default class ArenaSwitchAnimation extends Component {
       );
     }
     if (nextProps.initStyles !== this.props.initStyles) {
-      let nextPhaseStyle = this.state.initStyles.find(
+      let nextPhaseStyle: any = this.state.initStyles.find(
         style => style.key === "nextPhase"
       );
-      state.initStyles = nextProps.initStyles.concat(nextPhaseStyle);
+      state.initStyles = (nextProps.initStyles as ExtendedMotionStyle[]).concat(
+        nextPhaseStyle
+      );
     }
     this.setState(state);
-    if (nextProps.phase === IN && nextProps.playlist.length > 0) {
+    if (
+      nextProps.phase === AnimationPhases.IN &&
+      nextProps.playlist.length > 0
+    ) {
       nextProps.actions.playNext();
-    } else if (nextProps.phase === OUT && nextProps.autoClearPlay) {
+    } else if (
+      nextProps.phase === AnimationPhases.OUT &&
+      nextProps.autoClearPlay
+    ) {
       nextProps.actions.playNext();
     }
   }
 
   render() {
-    let { phase, numberToStyle } = this.props;
-    let { newPlayKey, oldPlayKey } = this.state;
+    let { phase, numberToStyles } = this.props;
+    let { newPlayKey, oldPlayKey, initStyles, styleCalculator } = this.state;
     return (
-      <TransitionMotion
-        defaultStyles={this.state.initStyles}
-        willLeave={this.willLeave}
-        styles={this.state.styleCalculator}
-      >
+      <TransitionMotion defaultStyles={initStyles} styles={styleCalculator}>
         {interpolatedStyles => {
-          let containerStyle, newPlayStyle, oldPlayStyle, animationPhase;
+          let containerStyle, newPlayStyle, oldPlayStyle;
+          let animationPhase: AnimationPhases = (interpolatedStyles.find(
+            styleObj => styleObj.key === "nextPhase"
+          ) as any).style.phase;
           interpolatedStyles.forEach(styleObj => {
             let { key, style } = styleObj;
             switch (key) {
               case "container":
-                containerStyle = style;
+                containerStyle = numberToStyles.container(style, phase);
                 break;
               case "oldPlay":
-                oldPlayStyle = style;
+                oldPlayStyle = numberToStyles.oldPlay(style, phase);
                 break;
               case "newPlay":
-                newPlayStyle = style;
-                break;
-              case "nextPhase":
-                animationPhase = style.phase;
+                newPlayStyle = numberToStyles.newPlay(style, phase);
                 break;
             }
           });
           return (
-            <div
-              style={numberToStyle("container", containerStyle, animationPhase)}
-            >
+            <div style={containerStyle}>
               {this.props.children}
-              <div
-                key={oldPlayKey}
-                style={numberToStyle("oldPlay", oldPlayStyle, animationPhase)}
-              >
+              <div key={oldPlayKey} style={oldPlayStyle}>
                 {this.props[oldPlayKey].element}
               </div>
-              {animationPhase === IN ? null : (
-                <div
-                  key={newPlayKey}
-                  style={numberToStyle("newPlay", newPlayStyle, animationPhase)}
-                >
+              {animationPhase === AnimationPhases.IN ? null : (
+                <div key={newPlayKey} style={newPlayStyle}>
                   {this.props[newPlayKey].element}
                 </div>
               )}
