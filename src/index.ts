@@ -1,1 +1,1 @@
-export { ArenaRoute } from "./hocs";
+export { Route, RouteState, RouteProps } from "./hocs";

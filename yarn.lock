@@ -38,6 +38,10 @@
   version "2.2.43"
   resolved "https://registry.npmjs.org/@types/mocha/-/mocha-2.2.43.tgz#03c54589c43ad048cbcbfd63999b55d0424eec27"
 
+"@types/node@*":
+  version "8.0.47"
+  resolved "https://registry.npmjs.org/@types/node/-/node-8.0.47.tgz#968e596f91acd59069054558a00708c445ca30c2"
+
 "@types/node@^6.0.46":
   version "6.0.88"
   resolved "https://registry.npmjs.org/@types/node/-/node-6.0.88.tgz#f618f11a944f6a18d92b5c472028728a3e3d4b66"
@@ -45,6 +49,13 @@
 "@types/prop-types@^15.5.2":
   version "15.5.2"
   resolved "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.5.2.tgz#3c6b8dceb2906cc87fe4358e809f9d20c8d59be1"
+
+"@types/react-dom@^16.0.2":
+  version "16.0.2"
+  resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-16.0.2.tgz#2da9de21fd83f0140b64794ad9c47930230aedae"
+  dependencies:
+    "@types/node" "*"
+    "@types/react" "*"
 
 "@types/react-motion@^0.0.23":
   version "0.0.23"
