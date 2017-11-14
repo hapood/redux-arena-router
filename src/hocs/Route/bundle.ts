@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { ActionCreatorsMapObject } from "redux";
-import { SceneBundle } from "redux-arena";
 import Route from "./Route";
 import { Props, State } from "./types";
 import { DefaultSceneActions } from "redux-arena";
@@ -8,7 +7,7 @@ import { DefaultSceneActions } from "redux-arena";
 export default {
   Component: Route,
   propsPicker: (
-    _,
+    _:any,
     {
       _arenaScene: actions,
       _arenaSwitchAnimation: animationActions
@@ -36,4 +35,4 @@ export default {
   options: {
     vReducerKey: "_arenaRoute"
   }
-} as SceneBundle<Props>;
+}
