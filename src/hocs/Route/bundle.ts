@@ -1,24 +1,26 @@
-import { ReactNode } from "react";
-import { ActionCreatorsMapObject } from "redux";
+import { ReactNode, ComponentClass, StatelessComponent } from "react";
+import { ActionCreatorsMapObject, AnyAction } from "redux";
 import Route from "./Route";
 import { Props, State } from "./types";
-import { DefaultSceneActions } from "redux-arena";
+import { DefaultSceneActions, StateDict, ActionsDict } from "redux-arena";
 
 export default {
   Component: Route,
   propsPicker: (
-    _:any,
+    _: StateDict<{}>,
     {
       _arenaScene: actions,
       _arenaSwitchAnimation: animationActions
-    }: {
-      _arenaScene: DefaultSceneActions;
-      _arenaSwitchAnimation: {
-        addPlay: (node: ReactNode) => void | null | undefined;
-        removePlay: (node: ReactNode) => void | null | undefined;
-      };
-    }
-  ) =>
+    }: ActionsDict<
+      DefaultSceneActions,
+      {
+        _arenaSwitchAnimation: {
+          addPlay: (node: ReactNode) => void | null | undefined;
+          removePlay: (node: ReactNode) => void | null | undefined;
+        };
+      }
+    >
+  ):{} =>
     animationActions
       ? {
           actions,
@@ -31,10 +33,10 @@ export default {
           actions,
           animationActions,
           isAnimationOn: false,
-          addPlay:undefined,
+          addPlay: undefined,
           removePlay: undefined
         },
   options: {
     vReducerKey: "_arenaRoute"
   }
-}
+};
