@@ -30,7 +30,9 @@ export default {
       : {
           actions,
           animationActions,
-          isAnimationOn: false
+          isAnimationOn: false,
+          addPlay:undefined,
+          removePlay: undefined
         },
   options: {
     vReducerKey: "_arenaRoute"

@@ -68,9 +68,17 @@ export default class ArenaRoute extends React.Component<
   }
 
   componentWillReceiveProps(nextProps: ConnectedProps) {
-    let { location } = nextProps;
-    if (location !== this.props.location) {
-      this.setState({ isObsolete: true });
+    let { exact, path, strict } = nextProps;
+    if (
+      path !== this.props.path ||
+      exact !== this.props.exact ||
+      strict !== this.props.strict
+    ) {
+      this.props.actions.setState({
+        path,
+        exact,
+        strict
+      });
     }
   }
 
