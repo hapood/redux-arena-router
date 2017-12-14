@@ -3,6 +3,7 @@ import { ActionCreatorsMapObject, AnyAction } from "redux";
 import Route from "./Route";
 import { Props, State } from "./types";
 import { DefaultSceneActions, StateDict, ActionsDict } from "redux-arena";
+import { match } from "react-router";
 
 export default {
   Component: Route,
@@ -20,18 +21,22 @@ export default {
         };
       }
     >
-  ):{} =>
+  ): {
+    computedMatch?: match<{}>;
+    actions: DefaultSceneActions;
+    isAnimationOn: boolean;
+    addPlay: ((node: ReactNode) => void) | undefined;
+    removePlay: ((node: ReactNode) => void) | undefined;
+  } =>
     animationActions
       ? {
           actions,
-          animationActions,
           isAnimationOn: true,
           addPlay: animationActions.addPlay,
           removePlay: animationActions.removePlay
         }
       : {
           actions,
-          animationActions,
           isAnimationOn: false,
           addPlay: undefined,
           removePlay: undefined

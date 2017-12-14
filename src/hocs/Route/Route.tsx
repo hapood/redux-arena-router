@@ -46,7 +46,12 @@ export default class ArenaRoute extends React.Component<
   }
 
   componentWillMount() {
-    let { isAnimationOn, addPlay } = this.props;
+    let { isAnimationOn, addPlay, path, exact, strict } = this.props;
+    this.props.actions.setState({
+      path,
+      exact,
+      strict
+    });
     let state = {
       playNode: this.rendToElement(
         this.props,
