@@ -15,16 +15,17 @@ export type Props = {
 export type ConnectedProps = {
   computedMatch?: match<{}>;
   actions: DefaultSceneActions;
-  isAnimationOn: boolean;
-  addPlay: (node: ReactNode) => void;
-  removePlay: (node: ReactNode) => void;
+  onMount?: (node: ReactNode) => void;
+  onUnmount?: (node: ReactNode) => void;
+  onUpdate?: (node: ReactNode) => void;
+  isRenderDisabled?: boolean;
 } & Props;
 
 export type State = {
-  location: Location|undefined;
-  match: match<{}>|undefined;
-  history: History|undefined;
-  exact: boolean|undefined;
-  path: string|undefined;
-  strict: boolean|undefined;
+  location: Location | undefined;
+  match: match<{}> | undefined;
+  history: History | undefined;
+  exact: boolean | undefined;
+  path: string | undefined;
+  strict: boolean | undefined;
 };

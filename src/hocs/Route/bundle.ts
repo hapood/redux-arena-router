@@ -9,38 +9,13 @@ export default {
   Component: Route,
   propsPicker: (
     _: StateDict<{}>,
-    {
-      _arenaScene: actions,
-      _arenaSwitchAnimation: animationActions
-    }: ActionsDict<
-      DefaultSceneActions,
-      {
-        _arenaSwitchAnimation: {
-          addPlay: (node: ReactNode) => void | null | undefined;
-          removePlay: (node: ReactNode) => void | null | undefined;
-        };
-      }
-    >
+    { _arenaScene: actions }: ActionsDict<DefaultSceneActions>
   ): {
     computedMatch?: match<{}>;
     actions: DefaultSceneActions;
-    isAnimationOn: boolean;
-    addPlay: ((node: ReactNode) => void) | undefined;
-    removePlay: ((node: ReactNode) => void) | undefined;
-  } =>
-    animationActions
-      ? {
-          actions,
-          isAnimationOn: true,
-          addPlay: animationActions.addPlay,
-          removePlay: animationActions.removePlay
-        }
-      : {
-          actions,
-          isAnimationOn: false,
-          addPlay: undefined,
-          removePlay: undefined
-        },
+  } => ({
+    actions
+  }),
   options: {
     vReducerKey: "_arenaRoute"
   }
