@@ -21,7 +21,10 @@ export type ConnectedProps = {
 } & Props;
 
 export type State = {
-  location: Location;
-  match: match<{}>;
-  history: History;
+  location: Location|undefined;
+  match: match<{}>|undefined;
+  history: History|undefined;
+  exact: boolean|undefined;
+  path: string|undefined;
+  strict: boolean|undefined;
 };

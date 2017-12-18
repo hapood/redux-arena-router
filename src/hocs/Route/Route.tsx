@@ -46,7 +46,12 @@ export default class ArenaRoute extends React.Component<
   }
 
   componentWillMount() {
-    let { isAnimationOn, addPlay } = this.props;
+    let { isAnimationOn, addPlay, path, exact, strict } = this.props;
+    this.props.actions.setState({
+      path,
+      exact,
+      strict
+    });
     let state = {
       playNode: this.rendToElement(
         this.props,
@@ -68,9 +73,17 @@ export default class ArenaRoute extends React.Component<
   }
 
   componentWillReceiveProps(nextProps: ConnectedProps) {
-    let { location } = nextProps;
-    if (location !== this.props.location) {
-      this.setState({ isObsolete: true });
+    let { exact, path, strict } = nextProps;
+    if (
+      path !== this.props.path ||
+      exact !== this.props.exact ||
+      strict !== this.props.strict
+    ) {
+      this.props.actions.setState({
+        path,
+        exact,
+        strict
+      });
     }
   }
 
