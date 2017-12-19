@@ -10,21 +10,22 @@ export type Props = {
   strict?: boolean;
   location?: Location;
   children: ReactChild;
+  onMount?: (node: ReactNode) => void;
+  onUnmount?: (node: ReactNode) => void;
+  onUpdate?: (oldNode: ReactNode, newNode: ReactNode) => void;
+  isRenderDisabled?: boolean;
+  computedMatch?: match<{}>;
 };
 
 export type ConnectedProps = {
-  computedMatch?: match<{}>;
   actions: DefaultSceneActions;
-  isAnimationOn: boolean;
-  addPlay: (node: ReactNode) => void;
-  removePlay: (node: ReactNode) => void;
 } & Props;
 
 export type State = {
-  location: Location|undefined;
-  match: match<{}>|undefined;
-  history: History|undefined;
-  exact: boolean|undefined;
-  path: string|undefined;
-  strict: boolean|undefined;
+  location: Location | undefined;
+  match: match<{}> | undefined;
+  history: History | undefined;
+  exact: boolean | undefined;
+  path: string | undefined;
+  strict: boolean | undefined;
 };

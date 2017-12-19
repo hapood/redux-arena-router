@@ -46,7 +46,7 @@ export default class ArenaRoute extends React.Component<
   }
 
   componentWillMount() {
-    let { isAnimationOn, addPlay, path, exact, strict } = this.props;
+    let { isRenderDisabled, path, exact, strict, onMount } = this.props;
     this.props.actions.setState({
       path,
       exact,
@@ -55,25 +55,28 @@ export default class ArenaRoute extends React.Component<
     let state = {
       playNode: this.rendToElement(
         this.props,
-        isAnimationOn ? this.context.arenaReducerDict : null
+        isRenderDisabled ? this.context.arenaReducerDict : null
       )
     };
     this.setState(state, () => {
-      if (isAnimationOn) {
-        addPlay(this.state.playNode);
+      if (onMount) {
+        onMount(this.state.playNode);
       }
     });
   }
 
   componentWillUnmount() {
-    let { isAnimationOn, removePlay } = this.props;
-    if (isAnimationOn) {
-      removePlay(this.state.playNode);
+    let { onUnmount } = this.props;
+    if (onUnmount) {
+      onUnmount(this.state.playNode);
     }
   }
 
   componentWillReceiveProps(nextProps: ConnectedProps) {
-    let { exact, path, strict } = nextProps;
+    let { exact, path, strict, location } = nextProps;
+    if (location !== this.props.location) {
+      this.setState({ isObsolete: true });
+    }
     if (
       path !== this.props.path ||
       exact !== this.props.exact ||
@@ -89,27 +92,25 @@ export default class ArenaRoute extends React.Component<
 
   componentDidUpdate() {
     if (this.state.isObsolete) {
-      let { isAnimationOn, removePlay, addPlay } = this.props;
-      if (isAnimationOn) {
-        removePlay(this.state.playNode);
-      }
+      let { isRenderDisabled, onUpdate } = this.props;
+      let oldPlayNode = this.state.playNode;
       let state = {
         isObsolete: false,
         playNode: this.rendToElement(
           this.props,
-          isAnimationOn ? this.context.arenaReducerDict : null
+          isRenderDisabled ? this.context.arenaReducerDict : null
         )
       };
       this.setState(state, () => {
-        if (isAnimationOn) {
-          addPlay(this.state.playNode);
+        if (onUpdate) {
+          onUpdate(oldPlayNode, this.state.playNode);
         }
       });
     }
   }
 
   render() {
-    if (this.props.isAnimationOn) {
+    if (this.props.isRenderDisabled) {
       return <div />;
     } else {
       return this.state.playNode;
