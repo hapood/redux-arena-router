@@ -10,15 +10,15 @@ export type Props = {
   strict?: boolean;
   location?: Location;
   children: ReactChild;
+  onMount?: (node: ReactNode) => void;
+  onUnmount?: (node: ReactNode) => void;
+  onUpdate?: (oldNode: ReactNode, newNode: ReactNode) => void;
+  isRenderDisabled?: boolean;
+  computedMatch?: match<{}>;
 };
 
 export type ConnectedProps = {
-  computedMatch?: match<{}>;
   actions: DefaultSceneActions;
-  onMount?: (node: ReactNode) => void;
-  onUnmount?: (node: ReactNode) => void;
-  onUpdate?: (node: ReactNode) => void;
-  isRenderDisabled?: boolean;
 } & Props;
 
 export type State = {

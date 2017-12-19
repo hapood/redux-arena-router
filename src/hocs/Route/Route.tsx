@@ -93,9 +93,7 @@ export default class ArenaRoute extends React.Component<
   componentDidUpdate() {
     if (this.state.isObsolete) {
       let { isRenderDisabled, onUpdate } = this.props;
-      if (onUpdate) {
-        onUpdate(this.state.playNode);
-      }
+      let oldPlayNode = this.state.playNode;
       let state = {
         isObsolete: false,
         playNode: this.rendToElement(
@@ -105,7 +103,7 @@ export default class ArenaRoute extends React.Component<
       };
       this.setState(state, () => {
         if (onUpdate) {
-          onUpdate(this.state.playNode);
+          onUpdate(oldPlayNode, this.state.playNode);
         }
       });
     }
